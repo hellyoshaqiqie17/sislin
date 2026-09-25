@@ -3,13 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Analisis Sistem Linier Orde Dua: Aktuator Pneumatik Suspensi Aerostatik (ASCPA)</title>
+  <title>Sistem Linier ASCPA - WearOcean & PKM Inspired Architecture</title>
   
-  <!-- Fonts: Satoshi & JetBrains Mono (Identik C:\pkm & C:\hellyoshaqiqie) -->
-  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,600,500,400,300&display=swap">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap">
+  <!-- Preconnect for Fonts -->
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
   
-  <!-- KaTeX for LaTeX Math Typesetting -->
+  <!-- Satoshi & JetBrains Mono Fonts (Identik C:\pkm & C:\hellyoshaqiqie) -->
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Google Material Icons (Identik C:\pkm) -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- KaTeX for High Quality Math Typesetting -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
@@ -17,10 +28,7 @@
   <!-- Chart.js for Live Simulations -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
   
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  
-  <!-- Tailwind CSS CDN with Custom Configuration -->
+  <!-- Tailwind CSS CDN with Custom Tokens matching C:\pkm & C:\hellyoshaqiqie -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -33,31 +41,27 @@
           },
           colors: {
             brand: {
-              50: '#EEF2FF',
-              100: '#E0E7FF',
-              200: '#C7D2FE',
-              300: '#A5B4FC',
-              400: '#818CF8',
-              500: '#6366F1',
-              600: '#4F46E5',
-              700: '#4338CA',
               accent: '#4B6BFB',
+              accentLight: '#EEF2FF',
               accentHover: '#3B5BEB',
             },
             surface: {
-              dark: '#0B0F19',
+              canvas: '#FAFBFC',
+              shell: '#F1F5F9',
+              card: '#FFFFFF',
+              border: '#E2E8F0',
+              darkCanvas: '#090D16',
+              darkShell: '#0F172A',
               darkCard: '#111827',
+              darkCardElevated: '#161F30',
               darkBorder: 'rgba(255, 255, 255, 0.08)',
-              light: '#FAFBFC',
-              lightCard: '#FFFFFF',
-              lightBorder: '#E2E8F0'
             }
           },
           boxShadow: {
-            'glow': '0 0 25px -5px rgba(75, 107, 251, 0.3)',
-            'glow-cyan': '0 0 25px -5px rgba(6, 182, 212, 0.3)',
-            'card-dark': '0 4px 20px -2px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05)',
-            'card-light': '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(226, 232, 240, 0.8)',
+            'card': '0 1px 3px rgba(0,0,0,0.04), 0 6px 16px rgba(0,0,0,0.06)',
+            'elevated': '0 4px 6px rgba(0,0,0,0.04), 0 10px 24px rgba(0,0,0,0.08)',
+            'glow-blue': '0 0 25px -5px rgba(75, 107, 251, 0.35)',
+            'glow-emerald': '0 0 25px -5px rgba(16, 185, 129, 0.35)',
           }
         }
       }
@@ -65,384 +69,482 @@
   </script>
 
   <style>
-    /* Custom Styling inspired by C:\pkm and C:\hellyoshaqiqie */
     body {
       font-family: 'Satoshi', sans-serif;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      transition: background-color 0.3s ease, color 0.3s ease;
     }
-    
+
     code, pre, .font-mono {
       font-family: 'JetBrains Mono', monospace;
     }
 
-    .glass-card {
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-    }
-
-    .dark .glass-card {
-      background-color: rgba(17, 24, 39, 0.7);
-      border-color: rgba(255, 255, 255, 0.08);
-    }
-
-    .glass-card {
-      background-color: rgba(255, 255, 255, 0.85);
-      border-color: rgba(226, 232, 240, 0.8);
-    }
-
-    /* Ambient Background Gradients */
+    /* Grid pattern identik PKM */
     .bg-grid-pattern {
       background-size: 32px 32px;
-      background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-image: linear-gradient(to right, rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(148, 163, 184, 0.1) 1px, transparent 1px);
     }
-    .light .bg-grid-pattern {
-      background-image: linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
-                        linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+    .dark .bg-grid-pattern {
+      background-image: linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
     }
 
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .dark ::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.15);
-      border-radius: 4px;
+    .theme-transition {
+      transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
     }
 
     .katex-display {
-      margin: 1em 0;
+      margin: 0.85em 0;
       overflow-x: auto;
       overflow-y: hidden;
-      padding: 0.5em 0;
+      padding: 0.35em 0;
     }
 
-    /* Shimmer animation like hellyoshaqiqie skeleton */
-    @keyframes shimmer {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
-    }
-    .shimmer-active::after {
-      content: '';
-      position: absolute;
-      top: 0; right: 0; bottom: 0; left: 0;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
-      animation: shimmer 2s infinite;
-    }
-
-    /* Custom range slider styling */
+    /* Range slider modern */
     input[type=range] {
       accent-color: #4B6BFB;
+    }
+
+    /* Shimmer Skeleton animation */
+    @keyframes skeleton-shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    .animate-shimmer {
+      background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0) 100%);
+      background-size: 200% 100%;
+      animation: skeleton-shimmer 2s infinite;
     }
   </style>
 </head>
 
-<body class="bg-surface-light dark:bg-surface-dark text-slate-800 dark:text-slate-100 min-h-screen selection:bg-brand-500 selection:text-white relative">
+<body class="relative min-h-screen bg-slate-50 dark:bg-[#090D16] py-8 px-4 sm:px-6 lg:px-8 font-sans theme-transition overflow-x-hidden text-slate-900 dark:text-slate-100 selection:bg-blue-100 dark:selection:bg-blue-900 selection:text-[#4B6BFB]">
 
-  <!-- Ambient Glowing Background Accents -->
-  <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-    <div class="absolute -top-40 -left-40 w-96 h-96 bg-brand-600/20 dark:bg-brand-600/15 rounded-full blur-[128px]"></div>
-    <div class="absolute top-1/3 -right-40 w-96 h-96 bg-cyan-500/15 dark:bg-cyan-500/10 rounded-full blur-[128px]"></div>
-    <div class="absolute -bottom-40 left-1/3 w-96 h-96 bg-purple-600/15 dark:bg-purple-600/10 rounded-full blur-[128px]"></div>
-    <div class="absolute inset-0 bg-grid-pattern opacity-60"></div>
-  </div>
+  <!-- Background Dotted Grid (Identik C:\pkm) -->
+  <div class="fixed inset-0 bg-grid-pattern pointer-events-none opacity-40 dark:opacity-20 z-0"></div>
 
-  <!-- Top Floating Header -->
-  <header class="sticky top-4 z-50 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
-    <nav class="glass-card rounded-2xl p-2 sm:p-3 border shadow-card-light dark:shadow-card-dark flex items-center justify-between transition-all">
+  <!-- Floating Animated Gradient Blobs (Identik C:\pkm & C:\hellyoshaqiqie) -->
+  <div class="fixed top-[5%] left-[-15%] w-[42rem] h-[42rem] bg-blue-400/10 dark:bg-blue-500/10 rounded-full blur-[110px] pointer-events-none z-0"></div>
+  <div class="fixed top-[35%] right-[-15%] w-[45rem] h-[45rem] bg-emerald-400/10 dark:bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none z-0"></div>
+  <div class="fixed bottom-[5%] left-[10%] w-[38rem] h-[38rem] bg-indigo-400/15 dark:bg-indigo-500/15 rounded-full blur-[110px] pointer-events-none z-0"></div>
+
+  <!-- Main Glass Content Card Shell (Identik C:\pkm max-w-[1300px]) -->
+  <div class="relative z-10 max-w-[1300px] mx-auto bg-white dark:bg-[#111827] rounded-3xl p-6 sm:p-10 md:p-12 lg:p-14 shadow-xl border border-slate-200 dark:border-slate-800/80 theme-transition space-y-16">
+
+    <!-- ========================================================================= -->
+    <!-- NAVIGATION BAR (Identik C:\pkm) -->
+    <!-- ========================================================================= -->
+    <nav id="overview" class="flex items-center justify-between pb-6 border-b border-slate-200 dark:border-slate-800 theme-transition">
       
-      <!-- Brand & Project Title -->
-      <a href="#hero" class="flex items-center gap-3 pl-2 group">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-cyan-500 flex items-center justify-center text-white shadow-glow group-hover:scale-105 transition-transform">
-          <i data-lucide="activity" class="w-5 h-5"></i>
+      <!-- Brand Logo & Project Title -->
+      <a href="#hero" class="flex items-center gap-3 group">
+        <div class="h-10 w-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 border border-slate-200 dark:border-slate-800 overflow-hidden flex items-center justify-center shadow-sm text-[#4B6BFB] group-hover:scale-105 transition-transform">
+          <span class="material-icons text-xl">precision_manufacturing</span>
         </div>
         <div>
-          <div class="flex items-center gap-2">
-            <span class="font-bold text-sm sm:text-base tracking-tight text-slate-900 dark:text-white">ASCPA Dynamics</span>
-            <span class="hidden md:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono font-medium bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20">
+          <span class="font-sans text-base font-bold tracking-tight text-slate-800 dark:text-white uppercase flex items-center gap-2">
+            Sistem Linier ASCPA
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-blue-50 dark:bg-blue-950/80 text-[#4B6BFB] border border-blue-200 dark:border-blue-800">
               MSSP 2026
             </span>
-          </div>
-          <p class="text-[11px] text-slate-500 dark:text-slate-400 font-mono hidden sm:block">Linear Systems • Second-Order Analysis</p>
+          </span>
+          <p class="text-[11px] text-slate-400 font-mono hidden sm:block">Linear Time-Invariant (LTI) • Orde Dua & State-Space</p>
         </div>
       </a>
 
-      <!-- Quick Nav Links -->
-      <div class="hidden lg:flex items-center gap-1 text-xs font-medium text-slate-600 dark:text-slate-300">
-        <a href="#overview" class="px-3 py-1.5 rounded-lg hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors">Overview Paper</a>
-        <a href="#fisis" class="px-3 py-1.5 rounded-lg hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors">Input & Output</a>
-        <a href="#penurunan" class="px-3 py-1.5 rounded-lg hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors">Penurunan PDB Orde 2</a>
-        <a href="#state-space" class="px-3 py-1.5 rounded-lg hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors font-semibold text-brand-600 dark:text-brand-400">Reduksi ke 2 Orde 1</a>
-        <a href="#simulator" class="px-3 py-1.5 rounded-lg hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors">Simulator Live</a>
-        <a href="#figures" class="px-3 py-1.5 rounded-lg hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors">Galeri Hasil</a>
+      <!-- Horizontal Navigation Links -->
+      <div class="hidden lg:flex items-center gap-7 text-sm font-medium text-slate-500 dark:text-slate-400">
+        <a href="#overview-paper" class="text-[#4B6BFB] font-semibold hover:text-blue-700 dark:hover:text-blue-400 transition-colors">
+          Overview Paper
+        </a>
+        <a href="#input-output" class="hover:text-slate-800 dark:hover:text-white transition-colors">
+          Input & Output
+        </a>
+        <a href="#penurunan-pdb" class="hover:text-slate-800 dark:hover:text-white transition-colors">
+          Penurunan PDB Orde 2
+        </a>
+        <a href="#reduksi-state-space" class="hover:text-slate-800 dark:hover:text-white transition-colors font-bold text-indigo-600 dark:text-indigo-400">
+          Reduksi ke 2 Orde 1
+        </a>
+        <a href="#simulator-live" class="hover:text-slate-800 dark:hover:text-white transition-colors">
+          Simulator Live
+        </a>
+        <a href="#galeri-grafik" class="hover:text-slate-800 dark:hover:text-white transition-colors">
+          Galeri Hasil
+        </a>
       </div>
 
-      <!-- Actions: Theme Switcher & Status Badge -->
-      <div class="flex items-center gap-2">
-        <button id="themeToggle" class="p-2 rounded-xl text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white bg-slate-100 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700/60 transition-colors" title="Toggle Dark/Light Mode">
-          <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
-          <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
+      <!-- Action Buttons & Dark Mode Toggle -->
+      <div class="flex items-center gap-3">
+        <button id="themeToggle" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all shadow-sm" title="Ubah Tema Gelap/Terang">
+          <span class="material-icons text-base block dark:hidden">dark_mode</span>
+          <span class="material-icons text-base hidden dark:block text-amber-400">light_mode</span>
         </button>
-        <a href="#simulator" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-600 hover:bg-brand-500 text-white shadow-glow transition-all hover:scale-102">
-          <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
-          <span class="hidden sm:inline">Coba Simulasi</span>
+
+        <a href="#simulator-live" class="px-5 py-2.5 rounded-xl bg-[#4B6BFB] text-white hover:bg-blue-600 text-sm font-semibold transition-all shadow-md shadow-blue-500/20 inline-flex items-center gap-1.5 cursor-pointer">
+          <span class="material-icons text-sm">play_arrow</span>
+          <span>Buka Simulator</span>
         </a>
       </div>
     </nav>
-  </header>
 
-  <!-- Main Container -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 pb-24">
-
-    <!-- HERO SECTION -->
-    <section id="hero" class="relative pt-6 sm:pt-12 text-center max-w-4xl mx-auto space-y-6">
+    <!-- ========================================================================= -->
+    <!-- HERO SECTION (Identik grid-cols-1 lg:grid-cols-[1.2fr_1fr] C:\pkm) -->
+    <!-- ========================================================================= -->
+    <section id="hero" class="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-12 items-center">
       
-      <!-- Top Pill Badge -->
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-medium bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-        Sistem Linier Invarian-Waktu (LTI) • Berbasis Paper Jurnal Internasional
-      </div>
+      <!-- Left Column: Copywriting & Badges -->
+      <div class="flex flex-col gap-y-7">
+        <div class="space-y-4">
+          <span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-900/50 px-3 py-1 rounded-full w-fit inline-flex items-center gap-1.5">
+            <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Proyek Akhir Sistem Linier 2026 • Elsevier MSSP
+          </span>
 
-      <!-- Main Headline -->
-      <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 dark:text-white leading-[1.15]">
-        Pemodelan Dinamis & Penurunan <br class="hidden sm:inline"/>
-        <span class="bg-gradient-to-r from-brand-500 via-indigo-400 to-cyan-400 bg-clip-text text-transparent">
-          Persamaan Diferensial Orde Dua
-        </span>
-      </h1>
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.2]">
+            Pemodelan Dinamis & Penurunan <br class="hidden sm:inline"/>
+            <span class="text-[#4B6BFB]">Persamaan Diferensial Orde Dua</span>
+          </h1>
 
-      <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-normal max-w-3xl mx-auto">
-        Kajian komprehensif sistem fisik nyata aktuator pneumatik bersuspensi aerostatik (<strong class="text-slate-900 dark:text-white">ASCPA</strong>) pada <em>end-effector</em> penggerindaan robotik presisi: dari eliminasi gesekan nonlinier 99.48%, formulasi masukan-keluaran, hingga reduksi ke 2 persamaan diferensial orde 1 (<em>State-Space</em>).
-      </p>
+          <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl">
+            Kajian sistemik aktuator pneumatik kompak bersuspensi aerostatik (<strong class="text-slate-900 dark:text-white">ASCPA</strong>) untuk penggerindaan robotik presisi: eliminasi gesekan nonlinier sebesar <strong>99,48%</strong>, formulasi relasi fisis masukan-keluaran, hingga reduksi matematis menjadi <strong>2 buah persamaan diferensial orde 1 (State-Space)</strong>.
+          </p>
+        </div>
 
-      <!-- Quick Metrics Grid -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-4">
-        <div class="glass-card p-4 rounded-2xl border text-left">
-          <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400 mb-1">REDUKSI GESEKAN</div>
-          <div class="text-2xl font-black text-emerald-500 font-mono">99.48%</div>
-          <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Eliminasi kontak padat</div>
+        <!-- Action CTAs -->
+        <div class="flex flex-wrap items-center gap-4">
+          <a href="#simulator-live" class="inline-flex items-center gap-2 text-white bg-[#4B6BFB] hover:bg-blue-600 px-6 py-3.5 rounded-xl font-semibold shadow-lg shadow-blue-500/20 transition-all cursor-pointer">
+            <span class="material-icons text-base">tune</span>
+            <span>Uji Parameter Interaktif</span>
+          </a>
+          <a href="#input-output" class="inline-flex items-center gap-2 text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 px-6 py-3.5 rounded-xl font-semibold transition-all cursor-pointer border border-slate-200 dark:border-slate-700">
+            <span class="material-icons text-base">developer_board</span>
+            <span>Skema Fisik & I/O</span>
+          </a>
         </div>
-        <div class="glass-card p-4 rounded-2xl border text-left">
-          <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400 mb-1">FREKUENSI ALAMI \(\omega_n\)</div>
-          <div class="text-2xl font-black text-brand-500 font-mono">5.0 rad/s</div>
-          <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">\(f_n = 0.796\text{ Hz}\)</div>
-        </div>
-        <div class="glass-card p-4 rounded-2xl border text-left">
-          <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400 mb-1">RASIO REDAMAN \(\zeta\)</div>
-          <div class="text-2xl font-black text-cyan-400 font-mono">0.60</div>
-          <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Underdamped stabil</div>
-        </div>
-        <div class="glass-card p-4 rounded-2xl border text-left">
-          <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400 mb-1">KUTUB BIDANG-\(s\)</div>
-          <div class="text-2xl font-black text-purple-400 font-mono">-3 ± j4</div>
-          <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">LHP (BIBO Asimtotik)</div>
-        </div>
-      </div>
-    </section>
 
-    <!-- SECTION 1: OVERVIEW PAPER -->
-    <section id="overview" class="space-y-8 scroll-mt-24">
-      
-      <!-- Section Header -->
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
-        <div>
-          <div class="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-brand-600 dark:text-brand-400 mb-1">
-            <i data-lucide="book-open" class="w-4 h-4"></i> BAGIAN 1
+        <!-- Feature Pill Indicators (Identik C:\pkm) -->
+        <div class="flex flex-wrap gap-3">
+          <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-900">
+            <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+            <span>Reduksi Gesekan 99.48%</span>
           </div>
-          <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Overview Paper Bereputasi Internasional (MSSP 2026)
-          </h2>
-        </div>
-        <div class="text-xs font-mono text-slate-500 dark:text-slate-400">
-          Mechanical Systems and Signal Processing (Elsevier, Q1)
+          <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-900">
+            <span class="h-2 w-2 rounded-full bg-blue-500"></span>
+            <span>Frek. Alami \(\omega_n = 5.0\text{ rad/s}\)</span>
+          </div>
+          <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-900">
+            <span class="h-2 w-2 rounded-full bg-indigo-500"></span>
+            <span>Kutub LHP \(p_{1,2} = -3 \pm j4\)</span>
+          </div>
         </div>
       </div>
 
-      <!-- Paper Source Card -->
-      <div class="glass-card p-6 sm:p-8 rounded-3xl border shadow-card-light dark:shadow-card-dark relative overflow-hidden">
-        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <!-- Right Column: Live Actuator Telemetry & AI Status (Identik C:\pkm Right Column) -->
+      <div class="grid grid-cols-2 gap-4 h-full text-left font-sans">
         
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-center">
-          <div class="lg:col-span-2 space-y-4">
-            <div class="flex flex-wrap items-center gap-2">
-              <span class="px-2.5 py-1 rounded-full text-xs font-mono font-medium bg-red-500/10 text-red-500 border border-red-500/20">Elsevier</span>
-              <span class="px-2.5 py-1 rounded-full text-xs font-mono font-medium bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">Scopus Q1 / WoS SCI</span>
-              <span class="px-2.5 py-1 rounded-full text-xs font-mono font-medium bg-brand-500/10 text-brand-500 border border-brand-500/20">Tahun 2026</span>
-            </div>
-            
-            <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white leading-snug">
-              "Signal processing and force control for precision machining with grinding system integrating an aerostatic suspension compact pneumatic actuator"
+        <!-- Card 1: Telemetry Details (col-span-2) -->
+        <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 col-span-2 flex flex-col justify-between shadow-sm min-h-[220px]">
+          <div class="flex items-center justify-between pb-2.5 border-b border-slate-100 dark:border-slate-800">
+            <h3 class="text-xs font-bold text-slate-800 dark:text-white tracking-tight flex items-center gap-1.5">
+              <span class="material-icons text-[#4B6BFB] text-sm">speed</span>
+              Detail Status Telemetri Aktuator ASCPA
             </h3>
+            <span class="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded font-mono font-bold">ASCPA-CYL-01</span>
+          </div>
 
-            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-              Ditulis oleh <strong>Z. Yang, Y. Cao, X. Ding, G. Dong, dkk.</strong>, dipublikasikan pada jurnal bereputasi tinggi <em>Mechanical Systems and Signal Processing</em>, Vol. 251, Art. 114229, 2026.
+          <!-- Actuator Profile Info -->
+          <div class="flex items-center gap-3 my-2.5">
+            <div class="h-10 w-10 rounded-xl bg-blue-50 dark:bg-blue-950/80 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-[#4B6BFB]">
+              <span class="material-icons text-xl">air</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <h4 class="text-xs font-bold text-slate-800 dark:text-white truncate">Piston Film Aerostatik (\(D_p = 20\,\text{mm}\))</h4>
+              <div class="flex items-center gap-1.5 mt-0.5">
+                <span class="text-[9px] bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
+                  NORMAL OPERATION
+                </span>
+                <span class="text-[9px] bg-blue-50 dark:bg-blue-950/60 text-[#4B6BFB] px-1.5 py-0.5 rounded font-bold flex items-center gap-0.5">
+                  <span class="material-icons text-[10px]">check_circle</span> AI: Kontrol Linier Valid
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6-Metric Status Grid (Identik C:\pkm) -->
+          <div class="grid grid-cols-3 gap-2 text-[10px] bg-slate-50 dark:bg-slate-900/80 border border-slate-200/60 dark:border-slate-800 rounded-xl p-3">
+            <div>
+              <span class="text-slate-400 block text-[9px]">Gaya Masukan \(u(t)\)</span>
+              <span class="font-bold text-[#4B6BFB]" id="telem_u">1.00 N</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[9px]">Perpindahan \(y(t)\)</span>
+              <span class="font-bold text-emerald-500" id="telem_y">0.040 m</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[9px]">Tebal Film Udara</span>
+              <span class="font-bold text-slate-800 dark:text-white">\(h_0 = 30\,\mu\text{m}\)</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[9px]">Gesekan Coulomb</span>
+              <span class="font-bold text-emerald-500">0.0777 N (-99.48%)</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[9px]">Tekanan Suplai</span>
+              <span class="font-bold text-slate-800 dark:text-white">0.40 MPa</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[9px]">Status Kontak</span>
+              <span class="font-bold text-blue-600 dark:text-blue-400">ELASTIS LINIER</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Parameter Mekanika (BME280 style) -->
+        <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl p-4.5 flex flex-col justify-between shadow-sm min-h-[190px]">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+            <span class="text-[10px] font-bold text-slate-800 dark:text-white tracking-tight">Karakteristik LTI Orde 2</span>
+            <span class="text-[9px] bg-blue-50 dark:bg-blue-950/60 text-[#4B6BFB] px-1.5 py-0.5 rounded font-mono font-semibold">KANONIK</span>
+          </div>
+
+          <div class="my-2 space-y-1.5 text-[10px]">
+            <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800/60 pb-1">
+              <span class="text-slate-400">Massa \(m\)</span>
+              <span class="font-bold text-slate-800 dark:text-white">1.0 kg</span>
+            </div>
+            <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800/60 pb-1">
+              <span class="text-slate-400">Redaman \(c\)</span>
+              <span class="font-bold text-slate-800 dark:text-white">6.0 N·s/m</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400">Kekakuan \(k\)</span>
+              <span class="font-bold text-slate-800 dark:text-white">25.0 N/m</span>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 rounded-lg p-2 text-[9px] text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+            Rasio redaman \(\zeta = 0.60\) (Underdamped). Respon getaran teredam stabil tanpa fenomena stick-slip.
+          </div>
+        </div>
+
+        <!-- Card 3: Asisten Teori Kendali (Copilot-AI style) -->
+        <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl p-4.5 flex flex-col justify-between shadow-sm min-h-[190px]">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+            <span class="text-[10px] font-bold text-slate-800 dark:text-white tracking-tight flex items-center gap-1">
+              <span class="material-icons text-indigo-500 text-xs">psychology</span> Asisten State-Space
+            </span>
+            <span class="text-[9px] bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 px-1.5 py-0.5 rounded font-mono font-semibold">EM-KF-RTS</span>
+          </div>
+
+          <div class="my-2 z-10 text-[10px]">
+            <div class="font-bold text-slate-800 dark:text-white leading-tight">Reduksi ke 2 Persamaan Orde 1</div>
+            <div class="text-slate-400 text-[9px] mt-0.5">\(\dot{x}_1 = x_2, \quad \dot{x}_2 = -25x_1 - 6x_2 + u\)</div>
+            <p class="text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed text-[9px]">
+              Nilai eigen matriks keadaan: <span class="font-bold text-purple-600 dark:text-purple-400">\(\lambda_{1,2} = -3 \pm j4\)</span>.
             </p>
-
-            <div class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-2">
-              <div class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                <i data-lucide="target" class="w-4 h-4 text-brand-500"></i> Masalah Nyata yang Dipecahkan Paper:
-              </div>
-              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                Pada proses permesinan presisi seperti penggerindaan bilah turbin mesin aero atau lensa optik tingkat tinggi, robot membutuhkan aktuator <em>end-effector</em> yang fleksibel (kepatuhan pasif). Namun, aktuator pneumatik konvensional (TPA/LFPA) memiliki segel mekanis gesek padat yang menghasilkan gaya gesek Coulomb besar (\(15\text{ N}\)) dan gejala <em>stick-slip</em> parah. Fenomena ini merusak permukaan benda kerja dan membuat sistem menjadi sangat nonlinier.
-              </p>
-            </div>
           </div>
 
-          <!-- Tribology Comparison Widget -->
-          <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 space-y-4">
-            <div class="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider">
-              Hasil Uji Gesekan Eksperimental (Tabel 2 Paper)
-            </div>
-
-            <!-- Metric 1: Coulomb Friction -->
-            <div class="space-y-1.5">
-              <div class="flex justify-between text-xs font-mono">
-                <span class="text-slate-500">Gesekan Coulomb \(F_c\):</span>
-                <span class="font-bold text-slate-900 dark:text-white">ASCPA: 0.0777 N</span>
-              </div>
-              <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden flex">
-                <div class="bg-red-500 h-full" style="width: 100%" title="TPA: 15.0 N"></div>
-              </div>
-              <div class="flex justify-between text-[10px] text-slate-500 font-mono">
-                <span>TPA: 15.00 N</span>
-                <span>LFPA: 5.40 N</span>
-                <span class="text-emerald-500 font-bold">-99.48% (ASCPA)</span>
-              </div>
-            </div>
-
-            <!-- Metric 2: Static Friction -->
-            <div class="space-y-1.5">
-              <div class="flex justify-between text-xs font-mono">
-                <span class="text-slate-500">Gesekan Statis \(F_s\):</span>
-                <span class="font-bold text-slate-900 dark:text-white">ASCPA: 0.0767 N</span>
-              </div>
-              <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden flex">
-                <div class="bg-amber-500 h-full" style="width: 100%" title="TPA: 18.45 N"></div>
-              </div>
-              <div class="flex justify-between text-[10px] text-slate-500 font-mono">
-                <span>TPA: 18.45 N</span>
-                <span>LFPA: 8.70 N</span>
-                <span class="text-emerald-500 font-bold">-99.58% (ASCPA)</span>
-              </div>
-            </div>
-
-            <div class="pt-2 border-t border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 dark:text-slate-400">
-              <strong class="text-emerald-500">Implikasi Kunci:</strong> Kontak padat ditiadakan sepenuhnya oleh lapisan film udara hidrostatik tebal \(30\,\mu\text{m}\), sehingga gesekan nonlinier berganti menjadi gesekan viskos laminer murni (\(\sigma_2 = 1.2\,\text{N}\cdot\text{s/m}\)). Sistem sah dimodelkan sebagai <strong>LTI orde dua</strong>!
-            </div>
+          <div class="bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100/50 dark:border-indigo-900/50 rounded-lg p-2 text-[9px] text-indigo-700 dark:text-indigo-300 font-medium">
+            Sistem LTI memenuhi kriteria BIBO & Asimtotik stabil secara matematis.
           </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- BAGIAN 1: OVERVIEW PAPER (Identik style C:\pkm) -->
+    <!-- ========================================================================= -->
+    <section id="overview-paper" class="py-12 border-t border-slate-200 dark:border-slate-800 theme-transition space-y-8">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold text-blue-600 uppercase tracking-widest bg-blue-50 dark:bg-blue-950/60 px-3 py-1 rounded-full w-fit">
+            Bagian 1 • Rujukan Bereputasi
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mt-2">
+            Overview Paper Internasional Bereputasi (MSSP 2026)
+          </h2>
+          <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            Kajian jurnal ilmiah non-buku teks bereputasi tinggi terindeks Scopus Q1 & Web of Science.
+          </p>
+        </div>
+      </div>
+
+      <!-- 3 Feature Cards (Identik C:\pkm Features Grid) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 hover:shadow-lg transition-all" style="box-shadow: 0 1px 3px rgba(0,0,0,0.03)">
+          <div class="h-10 w-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 border border-blue-100 dark:border-blue-900/60 text-[#4B6BFB] flex items-center justify-center mb-5">
+            <span class="material-icons text-xl">precision_manufacturing</span>
+          </div>
+          <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-2">Permesinan Presisi & Kontrol Gaya</h3>
+          <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
+            Pada manufaktur bilah turbin mesin aero dan lensa optik, <em>end-effector</em> robot membutuhkan aktuator fleksibel yang mampu menjaga gaya kontak normal secara stabil guna mencegah terjadinya retak mikro bawah-permukaan.
+          </p>
+        </div>
+
+        <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 hover:shadow-lg transition-all" style="box-shadow: 0 1px 3px rgba(0,0,0,0.03)">
+          <div class="h-10 w-10 rounded-xl bg-red-50 dark:bg-red-950/60 border border-red-100 dark:border-red-900/60 text-red-600 flex items-center justify-center mb-5">
+            <span class="material-icons text-xl">error_outline</span>
+          </div>
+          <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-2">Kelemahan TPA/LFPA (Stick-Slip)</h3>
+          <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
+            Aktuator konvensional menggunakan segel karet luncur yang memicu gesekan Coulomb masif (\(15\text{ N}\)). Ini menghasilkan histeresis, osilasi <em>limit cycles</em>, dan perilaku nonlinier parah yang merusak kehalusan penggerindaan.
+          </p>
+        </div>
+
+        <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 hover:shadow-lg transition-all" style="box-shadow: 0 1px 3px rgba(0,0,0,0.03)">
+          <div class="h-10 w-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-100 dark:border-emerald-900/60 text-emerald-600 flex items-center justify-center mb-5">
+            <span class="material-icons text-xl">air</span>
+          </div>
+          <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-2">Inovasi Suspensi Aerostatik ASCPA</h3>
+          <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
+            Dengan menyuplai udara bertekanan hidrostatik (\(P = 0.4\,\text{MPa}\)) melalui \(n=10\) orifis ke celah \(h_0 = 30\,\mu\text{m}\), kontak padat ditiadakan. Gesekan Coulomb turun 99.48% menjadi hanya \(0.0777\text{ N}\), mewujudkan sistem linier murni!
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Friction Identification Table Card (Tabel 2 Paper) -->
+      <div class="bg-slate-50 dark:bg-[#161F30]/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <h4 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <span class="material-icons text-[#4B6BFB] text-base">table_chart</span>
+            Tabel Identifikasi Parameter Gesekan Riil Eksperimental (Tabel 2 Paper Yang et al., 2026)
+          </h4>
+          <span class="text-xs font-mono text-slate-400">Model LuGre: \(f = (F_c + (F_s - F_c)e^{-(v/v_s)^2})\text{sign}(v) + \sigma_2 v\)</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left font-mono">
+            <thead class="border-b border-slate-200 dark:border-slate-800 text-slate-400 uppercase text-[10px]">
+              <tr>
+                <th class="py-2.5 px-4">Parameter Model LuGre</th>
+                <th class="py-2.5 px-4">TPA (Konvensional)</th>
+                <th class="py-2.5 px-4">LFPA (Low Friction)</th>
+                <th class="py-2.5 px-4 text-[#4B6BFB]">ASCPA (Suspensi Udara)</th>
+                <th class="py-2.5 px-4 text-emerald-500">Tingkat Reduksi</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200/60 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+              <tr>
+                <td class="py-2.5 px-4 font-bold">Gesekan Coulomb \(F_c\)</td>
+                <td class="py-2.5 px-4">15.00 N</td>
+                <td class="py-2.5 px-4">5.40 N</td>
+                <td class="py-2.5 px-4 font-bold text-[#4B6BFB]">0.0777 N</td>
+                <td class="py-2.5 px-4 font-bold text-emerald-500">Turun 99.48%</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-4 font-bold">Gesekan Statis Maksimum \(F_s\)</td>
+                <td class="py-2.5 px-4">18.45 N</td>
+                <td class="py-2.5 px-4">8.70 N</td>
+                <td class="py-2.5 px-4 font-bold text-[#4B6BFB]">0.0767 N</td>
+                <td class="py-2.5 px-4 font-bold text-emerald-500">Turun 99.58%</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-4 font-bold">Kecepatan Stribeck \(v_s\)</td>
+                <td class="py-2.5 px-4">5.00 mm/s</td>
+                <td class="py-2.5 px-4">1.40 mm/s</td>
+                <td class="py-2.5 px-4 font-bold text-[#4B6BFB]">0.01 mm/s</td>
+                <td class="py-2.5 px-4 text-slate-500">Bebas stick-slip</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-4 font-bold">Koefisien Redaman Viskos \(\sigma_2\)</td>
+                <td class="py-2.5 px-4">0.283 N·s/mm</td>
+                <td class="py-2.5 px-4">0.010 N·s/mm</td>
+                <td class="py-2.5 px-4 font-bold text-[#4B6BFB]">0.0012 N·s/mm (\(1.2\,\text{N}\cdot\text{s/m}\))</td>
+                <td class="py-2.5 px-4 text-brand-accent font-bold">Dominan Linier</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 2: SISTEM FISIS & INPUT OUTPUT -->
-    <section id="fisis" class="space-y-8 scroll-mt-24">
+    <!-- ========================================================================= -->
+    <!-- BAGIAN 2: PENJELASAN MASUKAN (INPUT) & KELUARAN (OUTPUT) -->
+    <!-- ========================================================================= -->
+    <section id="input-output" class="py-12 border-t border-slate-200 dark:border-slate-800 theme-transition space-y-8">
       
-      <!-- Section Header -->
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
-        <div>
-          <div class="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-brand-600 dark:text-brand-400 mb-1">
-            <i data-lucide="cpu" class="w-4 h-4"></i> BAGIAN 2
-          </div>
-          <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Sistem Fisis, Penjelasan Masukan (Input), dan Keluaran (Output)
-          </h2>
-        </div>
-        <div class="text-xs font-mono text-slate-500 dark:text-slate-400">
-          Mekanika Translasi Aksial & Kontak Elastis
-        </div>
+      <div>
+        <span class="text-xs font-bold text-blue-600 uppercase tracking-widest bg-blue-50 dark:bg-blue-950/60 px-3 py-1 rounded-full w-fit">
+          Bagian 2 • Karakterisasi Fisis
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mt-2">
+          Penjelasan Relasi Fisis, Masukan (Input), dan Keluaran (Output)
+        </h2>
+        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          Mekanika translasi 1-DOF: dari modulasi tekanan katup servo hingga perpindahan pahat & gaya kontak gerinda.
+        </p>
       </div>
 
-      <!-- Schematic & Conceptual Card -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
-        <!-- Interactive Visual System Schematic Card -->
-        <div class="lg:col-span-7 glass-card p-6 rounded-3xl border shadow-card-light dark:shadow-card-dark space-y-4">
+        <!-- Schematic Card with Zoom Link -->
+        <div class="lg:col-span-6 bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-4 shadow-sm">
           <div class="flex items-center justify-between">
-            <h4 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <i data-lucide="layers" class="w-4 h-4 text-brand-500"></i>
-              Skema Fisik End-Effector Penggerindaan ASCPA
+            <h4 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <span class="material-icons text-[#4B6BFB] text-base">schema</span>
+              Skema Fisik End-Effector Gerinda ASCPA
             </h4>
-            <span class="text-xs font-mono px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Gbr. 1 Laporan</span>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500">Gbr. 1 Laporan</span>
           </div>
 
-          <!-- Embedded Schematic Image with Zoom Link -->
-          <div class="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700/80 bg-slate-950 group">
-            <img src="figures/fig1_system_schematic.png" alt="Skema Fisik Sistem ASCPA" class="w-full h-auto object-contain transform group-hover:scale-102 transition-transform duration-300">
-            <div class="absolute bottom-2 right-2 px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-md text-[11px] font-mono text-white flex items-center gap-1">
-              <i data-lucide="maximize-2" class="w-3 h-3"></i> Skema Dinamis 1-DOF
-            </div>
+          <div class="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-950">
+            <img src="figures/fig1_system_schematic.png" alt="Skema Sistem ASCPA" class="w-full h-auto object-contain">
           </div>
 
-          <div class="grid grid-cols-3 gap-2 text-center text-xs font-mono pt-2">
-            <div class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800/50">
-              <div class="text-slate-400 text-[10px]">MASSA PISTON+SPINDEL</div>
-              <div class="font-bold text-slate-900 dark:text-white">\(m = 1.0\text{ kg}\)</div>
-            </div>
-            <div class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800/50">
-              <div class="text-slate-400 text-[10px]">REDAMAN VISKOS FILM</div>
-              <div class="font-bold text-slate-900 dark:text-white">\(c = 6.0\text{ N}\cdot\text{s/m}\)</div>
-            </div>
-            <div class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800/50">
-              <div class="text-slate-400 text-[10px]">KEKAKUAN KONTAK</div>
-              <div class="font-bold text-slate-900 dark:text-white">\(k = 25.0\text{ N/m}\)</div>
-            </div>
-          </div>
+          <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            Menunjukkan rakitan piston bersuspensi film udara hidrostatik tebal \(h_0 = 30\,\mu\text{m}\), batang piston bertumpu pada bantalan udara tanpa kontak, roda gerinda berputar, serta interaksi kontak elastis dengan benda kerja (\(k = 25\,\text{N/m}\)).
+          </p>
         </div>
 
-        <!-- Input & Output Detailed Breakdown -->
-        <div class="lg:col-span-5 space-y-4">
+        <!-- Input & Output Technical Cards -->
+        <div class="lg:col-span-6 space-y-5">
           
           <!-- Input Card -->
-          <div class="glass-card p-6 rounded-3xl border shadow-card-light dark:shadow-card-dark border-l-4 border-l-emerald-500 space-y-3">
+          <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 border-l-4 border-l-[#4B6BFB] space-y-3 shadow-sm">
             <div class="flex items-center justify-between">
-              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
-                <i data-lucide="arrow-right-circle" class="w-3.5 h-3.5"></i> INPUT SISTEM \(u(t)\)
+              <span class="text-xs font-mono font-bold text-[#4B6BFB] uppercase tracking-wider flex items-center gap-1.5">
+                <span class="material-icons text-base">input</span> Sinyal Masukan (Input) \(u(t)\)
               </span>
               <span class="text-xs font-mono text-slate-400">[Satuan: Newton (N)]</span>
             </div>
-            
-            <h4 class="font-bold text-lg text-slate-900 dark:text-white">
-              Gaya Dorong Pneumatik Bersih Piston
+
+            <h4 class="text-base font-bold text-slate-900 dark:text-white">
+              Gaya Dorong Pneumatik Bersih pada Piston
             </h4>
 
-            <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 font-mono text-sm text-center text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-              \(u(t) = A_p \cdot \Delta P(t) = A_p [P_1(t) - P_2(t)]\)
+            <div class="p-3.5 rounded-xl bg-blue-50/70 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/60 font-mono text-sm text-center font-bold text-[#4B6BFB]">
+              \[u(t) = A_p \cdot \Delta P(t) = A_p [P_1(t) - P_2(t)]\]
             </div>
 
-            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-              <strong>Sumber Fisis:</strong> Perbedaan tekanan udara antara ruang kerja silinder yang dimodulasi secara dinamis oleh <em>high-speed proportional servo valve</em> (Festo MPYE-5-1/4-010-B). Katup ini menerima tegangan kendali dari prosesor waktu-nyata (RCP) untuk mengontrol gaya dorong aksial piston.
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              <strong>Asal Fisis:</strong> Perbedaan tekanan diferensial \(\Delta P(t)\) antara ruang maju dan mundur silinder yang dimodulasi secara dinamis oleh <em>high-speed proportional servo valve</em> (Festo MPYE-5-1/4-010-B) yang dikontrol tegangan perintah dari Real-Time Control Processor (RCP).
             </p>
           </div>
 
           <!-- Output Card -->
-          <div class="glass-card p-6 rounded-3xl border shadow-card-light dark:shadow-card-dark border-l-4 border-l-brand-500 space-y-3">
+          <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 border-l-4 border-l-emerald-500 space-y-3 shadow-sm">
             <div class="flex items-center justify-between">
-              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-brand-500/10 text-brand-500 border border-brand-500/20">
-                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> OUTPUT SISTEM \(y(t)\)
+              <span class="text-xs font-mono font-bold text-emerald-500 uppercase tracking-wider flex items-center gap-1.5">
+                <span class="material-icons text-base">output</span> Sinyal Keluaran (Output) \(y(t)\)
               </span>
-              <span class="text-xs font-mono text-slate-400">[Satuan: Meter (m) / Newton (N)]</span>
+              <span class="text-xs font-mono text-slate-400">[Satuan: Meter (m)]</span>
             </div>
-            
-            <h4 class="font-bold text-lg text-slate-900 dark:text-white">
-              Perpindahan Aksial & Gaya Kontak Gerinda
+
+            <h4 class="text-base font-bold text-slate-900 dark:text-white">
+              Perpindahan Aksial Pahat Gerinda & Gaya Kontak Normal
             </h4>
 
-            <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 font-mono text-sm text-center text-brand-600 dark:text-brand-400 border border-brand-500/20">
-              \(y(t) = x(t) \quad \iff \quad F_c(t) = k_e \cdot y(t)\)
+            <div class="p-3.5 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/60 font-mono text-sm text-center font-bold text-emerald-600 dark:text-emerald-400">
+              \[y(t) = x(t) \quad \iff \quad F_c(t) = k_e \cdot y(t)\]
             </div>
 
-            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-              <strong>Makna Fisis:</strong> Perpindahan aksial ujung spindel gerinda \(x(t)\) dari posisi setimbangnya. Karena kontak pahat gerinda dengan benda kerja memiliki kekakuan elastis \(k_e\), gaya kontak normal \(F_c(t)\) berbanding lurus secara linier dengan \(y(t)\). Mengendalikan perpindahan \(y(t)\) secara langsung meregulasi gaya gerinda!
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              <strong>Asal Fisis:</strong> Perpindahan aksial \(x(t)\) dari rakitan spindel gerinda. Karena antarmuka kontak pahat dengan benda kerja memiliki konstanta kekakuan elastis \(k_e\), gaya penggerindaan normal \(F_c(t)\) berbanding lurus secara linier terhadap \(y(t)\).
             </p>
           </div>
 
@@ -450,486 +552,407 @@
       </div>
     </section>
 
-    <!-- SECTION 3: PENURUNAN PDB ORDE 2 -->
-    <section id="penurunan" class="space-y-8 scroll-mt-24">
+    <!-- ========================================================================= -->
+    <!-- BAGIAN 3: PENURUNAN LENGKAP PDB ORDE 2 -->
+    <!-- ========================================================================= -->
+    <section id="penurunan-pdb" class="py-12 border-t border-slate-200 dark:border-slate-800 theme-transition space-y-8">
       
-      <!-- Section Header -->
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
-        <div>
-          <div class="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-brand-600 dark:text-brand-400 mb-1">
-            <i data-lucide="file-text" class="w-4 h-4"></i> BAGIAN 3
-          </div>
-          <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Penurunan Lengkap Persamaan Diferensial Orde 2
-          </h2>
-        </div>
-        <div class="text-xs font-mono text-slate-500 dark:text-slate-400">
-          Dari Hukum II Newton ke Bentuk Kanonik LTI
-        </div>
+      <div>
+        <span class="text-xs font-bold text-blue-600 uppercase tracking-widest bg-blue-50 dark:bg-blue-950/60 px-3 py-1 rounded-full w-fit">
+          Bagian 3 • Landasan Matematis
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mt-2">
+          Penurunan Lengkap Persamaan Diferensial Orde 2
+        </h2>
+        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          Dari kesetimbangan translasi Hukum II Newton ke bentuk kanonik sistem getaran LTI.
+        </p>
       </div>
 
-      <!-- Step-by-Step Derivation Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- 4-Step Pipeline Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
         
-        <!-- Step 1 -->
-        <div class="glass-card p-6 rounded-3xl border shadow-card-light dark:shadow-card-dark space-y-3 relative">
-          <div class="w-8 h-8 rounded-full bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20 flex items-center justify-center font-mono font-bold text-sm">
+        <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-2 shadow-sm">
+          <div class="h-8 w-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-[#4B6BFB] flex items-center justify-center font-mono font-bold text-xs">
             01
           </div>
-          <h4 class="font-bold text-slate-900 dark:text-white">Kesetimbangan Gaya Dinamis</h4>
-          <p class="text-xs text-slate-600 dark:text-slate-300">
-            Terapkan Hukum II Newton pada translasi aksial massa bergerak rakitan piston dan spindel:
-          </p>
-          <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 font-mono text-xs text-center border border-slate-200 dark:border-slate-700">
-            \(\sum F = m \frac{d^2 y(t)}{dt^2} = m \ddot{y}(t)\)
+          <h4 class="text-xs font-bold text-slate-900 dark:text-white">Kesetimbangan Newton</h4>
+          <div class="font-mono text-xs p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900 text-center">
+            \(m \ddot{y}(t) = \sum F\)
           </div>
-          <p class="text-xs text-slate-500">
-            Gaya yang bekerja meliputi gaya dorong pneumatik \(F_{\text{pneu}}\), gaya gesek \(F_{\text{fric}}\), dan reaksi kontak \(F_{\text{cont}}\).
+          <p class="text-[11px] text-slate-500 leading-relaxed">
+            Jumlah gaya mencakup dorong pneumatik \(F_{\text{pneu}}\), gesekan \(F_{\text{fric}}\), dan kontak \(F_{\text{cont}}\).
           </p>
         </div>
 
-        <!-- Step 2 -->
-        <div class="glass-card p-6 rounded-3xl border shadow-card-light dark:shadow-card-dark space-y-3 relative">
-          <div class="w-8 h-8 rounded-full bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20 flex items-center justify-center font-mono font-bold text-sm">
+        <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-2 shadow-sm">
+          <div class="h-8 w-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-[#4B6BFB] flex items-center justify-center font-mono font-bold text-xs">
             02
           </div>
-          <h4 class="font-bold text-slate-900 dark:text-white">Substitusi Hubungan Konstitutif</h4>
-          <p class="text-xs text-slate-600 dark:text-slate-300">
-            Berkat suspensi film aerostatik ASCPA, kontak padat lenyap, menyisakan redaman viskos laminer:
-          </p>
-          <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 font-mono text-xs text-center border border-slate-200 dark:border-slate-700 space-y-1">
-            <div>\(F_{\text{fric}}(t) = c \dot{y}(t)\)</div>
-            <div>\(F_{\text{cont}}(t) = k y(t)\)</div>
-            <div>\(F_{\text{pneu}}(t) = u(t)\)</div>
+          <h4 class="text-xs font-bold text-slate-900 dark:text-white">Gaya Konstitutif</h4>
+          <div class="font-mono text-[10px] p-2 rounded-lg bg-slate-50 dark:bg-slate-900 text-center space-y-0.5">
+            <div>\(F_{\text{fric}} = c \dot{y}(t)\)</div>
+            <div>\(F_{\text{cont}} = k y(t)\)</div>
           </div>
-          <p class="text-xs text-slate-500">
-            Koefisien \(c\) mencakup redaman geser film udara (\(\sigma_2 = 1.2\)) dan efek <em>squeeze-film</em>.
+          <p class="text-[11px] text-slate-500 leading-relaxed">
+            Lapisan aerostatik mengubah gesekan padat Coulomb menjadi geser laminer linier murni.
           </p>
         </div>
 
-        <!-- Step 3 -->
-        <div class="glass-card p-6 rounded-3xl border shadow-card-light dark:shadow-card-dark space-y-3 relative">
-          <div class="w-8 h-8 rounded-full bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20 flex items-center justify-center font-mono font-bold text-sm">
+        <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-2 shadow-sm">
+          <div class="h-8 w-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-[#4B6BFB] flex items-center justify-center font-mono font-bold text-xs">
             03
           </div>
-          <h4 class="font-bold text-slate-900 dark:text-white">PDB Orde Dua Sistem</h4>
-          <p class="text-xs text-slate-600 dark:text-slate-300">
-            Gabungkan seluruh gaya ke dalam satu persamaan diferensial linier homogen/non-homogen:
-          </p>
-          <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 font-mono text-xs text-center border border-slate-200 dark:border-slate-700 text-brand-500 font-bold">
-            \(m \frac{d^2 y(t)}{dt^2} + c \frac{dy(t)}{dt} + k y(t) = u(t)\)
+          <h4 class="text-xs font-bold text-slate-900 dark:text-white">PDB Orde 2 Gerak</h4>
+          <div class="font-mono text-xs p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900 text-center text-[#4B6BFB] font-bold">
+            \(m \ddot{y} + c \dot{y} + k y = u\)
           </div>
-          <p class="text-xs text-slate-500">
-            Persamaan diferensial biasa (PDB) orde 2 invarian waktu waktu-kontinu yang deterministik.
+          <p class="text-[11px] text-slate-500 leading-relaxed">
+            Persamaan diferensial biasa (PDB) linier invarian waktu waktu-kontinu yang eksak.
           </p>
         </div>
-      </div>
 
-      <!-- Canonical Form & Real Parameter Mapping -->
-      <div class="glass-card p-6 sm:p-8 rounded-3xl border shadow-card-light dark:shadow-card-dark space-y-6">
-        <h4 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-          <i data-lucide="binary" class="w-5 h-5 text-brand-500"></i>
-          Transformasi ke Bentuk Kanonik Standar Sistem Linier
-        </h4>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          <div class="space-y-4">
-            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-              Membagi kedua sisi persamaan dengan massa \(m\) menghasilkan bentuk kanonik getaran orde dua:
-            </p>
-            <div class="p-4 rounded-2xl bg-brand-500/10 border border-brand-500/20 text-center font-mono text-base font-bold text-brand-600 dark:text-brand-400">
-              \[\frac{d^2 y(t)}{dt^2} + 2\zeta \omega_n \frac{dy(t)}{dt} + \omega_n^2 y(t) = \frac{1}{m} u(t)\]
-            </div>
-            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Hubungan parameter kanonik dengan parameter fisik mekanika:
-            </p>
-            <div class="grid grid-cols-2 gap-3 text-xs font-mono">
-              <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-                \(\omega_n = \sqrt{\frac{k}{m}} = \sqrt{\frac{25}{1}} = 5.0\text{ rad/s}\)
-              </div>
-              <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-                \(\zeta = \frac{c}{2\sqrt{km}} = \frac{6}{2\sqrt{25}} = 0.60\)
-              </div>
-            </div>
+        <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-2 shadow-sm">
+          <div class="h-8 w-8 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-[#4B6BFB] flex items-center justify-center font-mono font-bold text-xs">
+            04
           </div>
-
-          <!-- Parameter Table -->
-          <div class="overflow-x-auto">
-            <table class="w-full text-xs text-left font-mono">
-              <thead class="border-b border-slate-200 dark:border-slate-800 text-slate-400">
-                <tr>
-                  <th class="py-2 px-3">Parameter</th>
-                  <th class="py-2 px-3">Makna Fisis</th>
-                  <th class="py-2 px-3">Nilai Eksak</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-600 dark:text-slate-300">
-                <tr>
-                  <td class="py-2 px-3 font-bold text-brand-500">\(m\)</td>
-                  <td class="py-2 px-3">Massa translasi piston & spindel gerinda</td>
-                  <td class="py-2 px-3 font-bold">1.0 kg</td>
-                </tr>
-                <tr>
-                  <td class="py-2 px-3 font-bold text-brand-500">\(c\)</td>
-                  <td class="py-2 px-3">Koefisien redaman viskos film udara</td>
-                  <td class="py-2 px-3 font-bold">6.0 N·s/m</td>
-                </tr>
-                <tr>
-                  <td class="py-2 px-3 font-bold text-brand-500">\(k\)</td>
-                  <td class="py-2 px-3">Kekakuan elastis kontak gerinda-benda kerja</td>
-                  <td class="py-2 px-3 font-bold">25.0 N/m</td>
-                </tr>
-                <tr>
-                  <td class="py-2 px-3 font-bold text-brand-500">\(\omega_d\)</td>
-                  <td class="py-2 px-3">Frekuensi sudut teredam (\(\omega_n \sqrt{1-\zeta^2}\))</td>
-                  <td class="py-2 px-3 font-bold">4.0 rad/s</td>
-                </tr>
-                <tr>
-                  <td class="py-2 px-3 font-bold text-brand-500">\(p_{1,2}\)</td>
-                  <td class="py-2 px-3">Kutub fungsi transfer (\(-\zeta\omega_n \pm j\omega_d\))</td>
-                  <td class="py-2 px-3 font-bold text-purple-400">-3 ± j4</td>
-                </tr>
-              </tbody>
-            </table>
+          <h4 class="text-xs font-bold text-slate-900 dark:text-white">Bentuk Kanonik</h4>
+          <div class="font-mono text-[10px] p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900 text-center text-emerald-500 font-bold">
+            \(\ddot{y} + 2\zeta\omega_n \dot{y} + \omega_n^2 y = \frac{u}{m}\)
           </div>
+          <p class="text-[11px] text-slate-500 leading-relaxed">
+            \(\omega_n = \sqrt{k/m} = 5.0\text{ rad/s}\), \(\zeta = \frac{c}{2\sqrt{km}} = 0.60\) (underdamped).
+          </p>
         </div>
 
       </div>
+
+      <!-- Parameter Mapping Details -->
+      <div class="bg-slate-50 dark:bg-[#161F30]/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <div class="space-y-3">
+          <h4 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <span class="material-icons text-[#4B6BFB] text-base">functions</span>
+            Fungsi Transfer Laplace \(G(s)\) & Konstelasi Kutub
+          </h4>
+          <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            Menerapkan Transformasi Laplace unilateral pada kondisi awal nol (\(y(0) = 0, \dot{y}(0) = 0\)):
+          </p>
+          <div class="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 font-mono text-sm text-center font-bold text-[#4B6BFB]">
+            \[G(s) = \frac{Y(s)}{U(s)} = \frac{1}{m s^2 + c s + k} = \frac{1}{s^2 + 6s + 25} = \frac{1}{(s + 3)^2 + 4^2}\]
+          </div>
+          <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            Akar persamaan karakteristik menghasilkan sepasang kutub konjugat kompleks:
+            <strong class="text-purple-600 dark:text-purple-400 font-mono">\(p_{1,2} = -3 \pm j4\)</strong>, dengan laju redaman eksponensial \(\sigma = 3.0\,\text{s}^{-1}\) dan frekuensi sudut teredam \(\omega_d = 4.0\,\text{rad/s}\).
+          </p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
+          <div class="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Pemetaan Parameter Riil Paper</div>
+          <div class="grid grid-cols-2 gap-2 text-xs font-mono">
+            <div class="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800">
+              <span class="text-slate-400 block text-[10px]">Massa Total \(m\)</span>
+              <span class="font-bold text-slate-900 dark:text-white">1.0 kg</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800">
+              <span class="text-slate-400 block text-[10px]">Redaman Total \(c\)</span>
+              <span class="font-bold text-slate-900 dark:text-white">6.0 N·s/m</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800">
+              <span class="text-slate-400 block text-[10px]">Kekakuan Kontak \(k\)</span>
+              <span class="font-bold text-slate-900 dark:text-white">25.0 N/m</span>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800">
+              <span class="text-slate-400 block text-[10px]">Penguatan DC \(K_{dc}\)</span>
+              <span class="font-bold text-[#4B6BFB]">0.040 m/N</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </section>
 
-    <!-- SECTION 4: REDUKSI KE 2 BUAH PDB ORDE 1 (STATE-SPACE) -->
-    <section id="state-space" class="space-y-8 scroll-mt-24">
+    <!-- ========================================================================= -->
+    <!-- BAGIAN 4: BAGAIMANA CARA MENJADIKAN KE 2 ORDE 1 (STATE-SPACE) -->
+    <!-- ========================================================================= -->
+    <section id="reduksi-state-space" class="py-12 border-t border-slate-200 dark:border-slate-800 theme-transition space-y-8">
       
-      <!-- Section Header -->
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
-        <div>
-          <div class="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-brand-600 dark:text-brand-400 mb-1">
-            <i data-lucide="workflow" class="w-4 h-4"></i> BAGIAN 4 (FOKUS UTAMA)
-          </div>
-          <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Bagaimana Cara Menjadikan PDB Orde 2 ke 2 Buah PDB Orde 1?
-          </h2>
-        </div>
-        <div class="text-xs font-mono text-slate-500 dark:text-slate-400">
-          Reduksi Orde ke Representasi Ruang Keadaan (State-Space)
-        </div>
+      <div>
+        <span class="text-xs font-bold text-indigo-600 uppercase tracking-widest bg-indigo-50 dark:bg-indigo-950/60 px-3 py-1 rounded-full w-fit">
+          Bagian 4 • Fokus Utama Permintaan Anda
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mt-2">
+          Bagaimana Cara Menjadikan PDB Orde 2 ke 2 Buah PDB Orde 1?
+        </h2>
+        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          Penjelasan langkah demi langkah (step-by-step) reduksi orde ke dalam variabel keadaan (*State-Space Representation*).
+        </p>
       </div>
 
-      <!-- Why Reduce Card -->
-      <div class="glass-card p-6 sm:p-8 rounded-3xl border shadow-card-light dark:shadow-card-dark bg-gradient-to-r from-brand-900/10 via-slate-900/10 to-cyan-900/10 space-y-4">
-        <h4 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-          <i data-lucide="help-circle" class="w-5 h-5 text-brand-500"></i>
-          Mengapa Persamaan Orde 2 Perlu Dipecah Menjadi 2 Buah Persamaan Orde 1?
+      <!-- Why Card -->
+      <div class="bg-gradient-to-r from-blue-50/60 via-indigo-50/40 to-slate-50 dark:from-blue-950/20 dark:via-indigo-950/20 dark:to-slate-900/40 border border-blue-200/60 dark:border-blue-900/40 rounded-2xl p-6 space-y-3">
+        <h4 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <span class="material-icons text-[#4B6BFB] text-base">help_outline</span>
+          Mengapa Persamaan Diferensial Orde 2 Harus Dipecah Menjadi 2 Buah Persamaan Orde 1?
         </h4>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
-          <div class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 space-y-2">
-            <div class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5 text-xs">
-              <i data-lucide="filter" class="w-4 h-4 text-brand-500"></i> 1. Kebutuhan Filter Kalman (Paper MSSP)
-            </div>
-            <p class="text-xs leading-relaxed">
-              Paper Yang et al. menerapkan algoritma <strong>EM-KF-RTS</strong> (Kalman Filter + Rauch-Tung-Striebel smoother). Seluruh teori estimasi Kalman secara fundamental dibangun dalam persamaan matriks <em>state-space</em> orde 1: \(\mathbf{\dot{x}} = \mathbf{A}\mathbf{x} + \mathbf{B}u\)!
-            </p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-600 dark:text-slate-300 pt-1">
+          <div class="p-3.5 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 space-y-1">
+            <strong class="text-[#4B6BFB] block">1. Algoritma Filter Kalman (Paper MSSP)</strong>
+            Algoritma <em>EM-KF-RTS</em> pada paper bekerja langsung pada persamaan ruang keadaan matriks orde 1: \(\mathbf{\dot{x}} = \mathbf{A}\mathbf{x} + \mathbf{B}u\).
           </div>
-
-          <div class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 space-y-2">
-            <div class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5 text-xs">
-              <i data-lucide="terminal" class="w-4 h-4 text-emerald-500"></i> 2. Solver Komputasi Numerik (ODE45 / RK4)
-            </div>
-            <p class="text-xs leading-relaxed">
-              Algoritma komputasi seperti Runge-Kutta 4th order (RK4) atau fungsi <code>ode45</code> MATLAB/SciPy tidak dapat menyelesaikan turunan kedua \(\ddot{y}\) secara langsung. Sistem harus diubah menjadi sistem persamaan diferensial orde 1 simultan.
-            </p>
+          <div class="p-3.5 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 space-y-1">
+            <strong class="text-emerald-500 block">2. Solver Komputasi Numerik (ODE45/RK4)</strong>
+            Komputer tidak dapat mengintegrasikan turunan kedua secara langsung. Solver Runge-Kutta hanya dapat menyelesaikan vektor turunan pertama secara simultan.
           </div>
-
-          <div class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 space-y-2">
-            <div class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5 text-xs">
-              <i data-lucide="sliders" class="w-4 h-4 text-purple-500"></i> 3. Teori Kendali Modern
-            </div>
-            <p class="text-xs leading-relaxed">
-              Memungkinkan observabilitas keadaan, keterkendalian (<em>controllability</em>), serta desain umpan balik keadaan penuh (<em>Full State Feedback</em>: \(u = -\mathbf{K}\mathbf{x}\)) untuk penempatan kutub presisi tinggi.
-            </p>
+          <div class="p-3.5 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 space-y-1">
+            <strong class="text-indigo-500 block">3. Teori Kendali Modern (State Feedback)</strong>
+            Memungkinkan kontrol posisi dan kecepatan sekaligus menggunakan hukum umpan balik keadaan \(u = -\mathbf{K}\mathbf{x}\).
           </div>
         </div>
       </div>
 
-      <!-- Step-by-Step Mathematical Walkthrough -->
-      <div class="glass-card p-6 sm:p-8 rounded-3xl border shadow-card-light dark:shadow-card-dark space-y-8">
-        <h4 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-          <i data-lucide="check-square" class="w-5 h-5 text-emerald-500"></i>
-          Langkah Rinci Penurunan Matematis (Step-by-Step)
-        </h4>
-
-        <!-- Step 1 in State Space -->
-        <div class="space-y-3">
+      <!-- Step-by-Step Derivation Breakdown -->
+      <div class="space-y-6">
+        
+        <!-- Step A: Define States -->
+        <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-3 shadow-sm">
           <div class="flex items-center gap-3">
-            <span class="w-7 h-7 rounded-lg bg-brand-500 text-white flex items-center justify-center font-mono font-bold text-xs">A</span>
-            <h5 class="font-bold text-slate-900 dark:text-white text-base">Definisikan Dua Variabel Keadaan Fisik (State Variables)</h5>
+            <span class="h-7 w-7 rounded-lg bg-[#4B6BFB] text-white flex items-center justify-center font-mono font-bold text-xs">A</span>
+            <h4 class="text-sm font-bold text-slate-900 dark:text-white">Langkah 1: Definisikan Dua Variabel Keadaan Fisik (State Variables)</h4>
           </div>
-          <p class="text-sm text-slate-600 dark:text-slate-300 pl-10">
-            Sistem mekanik orde dua membutuhkan 2 besaran memori energi bebas: <strong>posisi</strong> (energi potensial pegas) dan <strong>kecepatan</strong> (energi kinetik massa). Kita definisikan:
+          <p class="text-xs text-slate-600 dark:text-slate-300 pl-10 leading-relaxed">
+            Karena sistem mekanik ini memiliki 2 elemen penyimpan energi (energi potensial pegas kontak dan energi kinetik massa), kita mendefinisikan 2 variabel keadaan yang mewakili <strong>posisi</strong> dan <strong>kecepatan</strong>:
           </p>
-          <div class="pl-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 font-mono text-sm space-y-1">
-              <div class="text-brand-500 font-bold">Variabel Keadaan 1 (\(x_1\)): Posisi</div>
-              <div class="text-slate-900 dark:text-white">\[x_1(t) \equiv y(t)\]</div>
-              <div class="text-xs text-slate-500">Perpindahan aksial gerinda dari kesetimbangan [meter]</div>
+          <div class="pl-10 grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1 font-mono text-xs">
+            <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+              <span class="text-slate-400 block text-[10px]">Variabel Keadaan 1 (Posisi):</span>
+              <span class="text-sm font-bold text-[#4B6BFB] block my-1">\[x_1(t) \equiv y(t)\]</span>
+              <span class="text-[11px] text-slate-500">Perpindahan aksial gerinda dari kesetimbangan [meter]</span>
             </div>
-            <div class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 font-mono text-sm space-y-1">
-              <div class="text-cyan-400 font-bold">Variabel Keadaan 2 (\(x_2\)): Kecepatan</div>
-              <div class="text-slate-900 dark:text-white">\[x_2(t) \equiv \frac{dy(t)}{dt} = \dot{y}(t)\]</div>
-              <div class="text-xs text-slate-500">Kecepatan luncur aksial rakitan piston [m/s]</div>
+            <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+              <span class="text-slate-400 block text-[10px]">Variabel Keadaan 2 (Kecepatan):</span>
+              <span class="text-sm font-bold text-emerald-500 block my-1">\[x_2(t) \equiv \frac{dy(t)}{dt} = \dot{y}(t)\]</span>
+              <span class="text-[11px] text-slate-500">Kecepatan luncur aksial rakitan piston [m/s]</span>
             </div>
           </div>
         </div>
 
-        <!-- Step 2 in State Space -->
-        <div class="space-y-3">
+        <!-- Step B: Differentiate States -->
+        <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-3 shadow-sm">
           <div class="flex items-center gap-3">
-            <span class="w-7 h-7 rounded-lg bg-brand-500 text-white flex items-center justify-center font-mono font-bold text-xs">B</span>
-            <h5 class="font-bold text-slate-900 dark:text-white text-base">Turunkan Masing-Masing Variabel Keadaan terhadap Waktu</h5>
+            <span class="h-7 w-7 rounded-lg bg-[#4B6BFB] text-white flex items-center justify-center font-mono font-bold text-xs">B</span>
+            <h4 class="text-sm font-bold text-slate-900 dark:text-white">Langkah 2: Ambil Turunan Pertama Masing-Masing Variabel Keadaan</h4>
           </div>
-          <p class="text-sm text-slate-600 dark:text-slate-300 pl-10">
-            Cari laju perubahan waktu (\(\dot{x}_1\) dan \(\dot{x}_2\)) dan nyatakan hanya dalam \(x_1, x_2,\) dan masukan \(u(t)\):
-          </p>
-          
           <div class="pl-10 space-y-4">
-            <!-- First ODE -->
-            <div class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
-              <div class="text-xs font-mono font-bold text-brand-500 uppercase">
-                Persamaan Diferensial Orde 1 Pertama (\(\dot{x}_1\)):
-              </div>
-              <p class="text-xs text-slate-600 dark:text-slate-400">
-                Berdasarkan definisi kecepatan, turunan pertama dari posisi \(x_1\) adalah kecepatan \(x_2\):
-              </p>
-              <div class="font-mono text-base font-bold text-slate-900 dark:text-white bg-slate-200 dark:bg-slate-900 p-3 rounded-xl text-center">
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              Cari laju perubahan waktu terhadap masing-masing variabel (\(\dot{x}_1\) dan \(\dot{x}_2\)):
+            </p>
+
+            <!-- Equation 1 -->
+            <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+              <span class="text-[11px] font-bold text-[#4B6BFB] block mb-1">Persamaan Diferensial Orde 1 Pertama:</span>
+              <p class="text-xs text-slate-500 mb-1">Berdasarkan definisi kecepatan, turunan posisi adalah kecepatan:</p>
+              <div class="font-mono text-sm font-bold text-slate-900 dark:text-white text-center py-1">
                 \[\dot{x}_1(t) = \frac{dx_1}{dt} = \frac{dy}{dt} = x_2(t)\]
               </div>
             </div>
 
-            <!-- Second ODE -->
-            <div class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
-              <div class="text-xs font-mono font-bold text-cyan-400 uppercase">
-                Persamaan Diferensial Orde 1 Kedua (\(\dot{x}_2\)):
-              </div>
-              <p class="text-xs text-slate-600 dark:text-slate-400">
-                Turunan dari kecepatan \(x_2\) adalah percepatan \(\ddot{y}(t)\). Ambil persamaan Hukum Newton:
-              </p>
-              <div class="font-mono text-xs text-slate-500 text-center">
+            <!-- Equation 2 -->
+            <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+              <span class="text-[11px] font-bold text-emerald-500 block mb-1">Persamaan Diferensial Orde 1 Kedua:</span>
+              <p class="text-xs text-slate-500 mb-1">Turunan kecepatan adalah percepatan \(\ddot{y}(t)\). Ambil persamaan gerak Hukum Newton:</p>
+              <div class="font-mono text-xs text-slate-400 text-center py-0.5">
                 \[m \ddot{y}(t) + c \dot{y}(t) + k y(t) = u(t) \implies \ddot{y}(t) = -\frac{k}{m} y(t) - \frac{c}{m} \dot{y}(t) + \frac{1}{m} u(t)\]
               </div>
-              <p class="text-xs text-slate-600 dark:text-slate-400">
-                Substitusikan \(y(t) = x_1(t)\) dan \(\dot{y}(t) = x_2(t)\):
-              </p>
-              <div class="font-mono text-base font-bold text-slate-900 dark:text-white bg-slate-200 dark:bg-slate-900 p-3 rounded-xl text-center">
+              <p class="text-xs text-slate-500 my-1">Substitusikan \(y(t) = x_1(t)\) dan \(\dot{y}(t) = x_2(t)\):</p>
+              <div class="font-mono text-sm font-bold text-slate-900 dark:text-white text-center py-1">
                 \[\dot{x}_2(t) = -\frac{k}{m} x_1(t) - \frac{c}{m} x_2(t) + \frac{1}{m} u(t)\]
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Step 3 in State Space -->
-        <div class="space-y-3">
+        <!-- Step C: Matrix Representation -->
+        <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-3 shadow-sm">
           <div class="flex items-center gap-3">
-            <span class="w-7 h-7 rounded-lg bg-brand-500 text-white flex items-center justify-center font-mono font-bold text-xs">C</span>
-            <h5 class="font-bold text-slate-900 dark:text-white text-base">Susun ke dalam Format Vektor-Matriks Ruang Keadaan</h5>
+            <span class="h-7 w-7 rounded-lg bg-[#4B6BFB] text-white flex items-center justify-center font-mono font-bold text-xs">C</span>
+            <h4 class="text-sm font-bold text-slate-900 dark:text-white">Langkah 3: Susun ke dalam Format Matriks Ruang Keadaan (State-Space)</h4>
           </div>
-          
           <div class="pl-10 space-y-4">
-            <p class="text-sm text-slate-600 dark:text-slate-300">
-              Satukan kedua persamaan diferensial orde 1 simultan ke dalam bentuk matriks standar:
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              Dua persamaan orde 1 simultan di atas disatukan ke dalam bentuk kanonik matriks:
             </p>
-            <div class="p-5 rounded-2xl bg-brand-500/10 border border-brand-500/20 font-mono text-sm sm:text-base font-bold text-brand-600 dark:text-brand-400 text-center overflow-x-auto">
+
+            <div class="p-4 rounded-xl bg-blue-50/70 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/60 font-mono text-sm text-center font-bold text-[#4B6BFB]">
               \[\begin{bmatrix} \dot{x}_1(t) \\ \dot{x}_2(t) \end{bmatrix} = \begin{bmatrix} 0 & 1 \\ -\frac{k}{m} & -\frac{c}{m} \end{bmatrix} \begin{bmatrix} x_1(t) \\ x_2(t) \end{bmatrix} + \begin{bmatrix} 0 \\ \frac{1}{m} \end{bmatrix} u(t)\]
             </div>
 
-            <!-- Output Equation in State-Space -->
-            <p class="text-sm text-slate-600 dark:text-slate-300">
-              Persamaan keluaran sistem (\(y(t) = x_1(t)\)):
-            </p>
-            <div class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 font-mono text-sm sm:text-base font-bold text-slate-900 dark:text-white text-center">
+            <!-- Output State Equation -->
+            <p class="text-xs text-slate-500">Persamaan keluaran sistem untuk perpindahan \(y(t) = x_1(t)\):</p>
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 font-mono text-sm text-center font-bold text-slate-900 dark:text-white">
               \[y(t) = \begin{bmatrix} 1 & 0 \end{bmatrix} \begin{bmatrix} x_1(t) \\ x_2(t) \end{bmatrix} + [0] u(t)\]
             </div>
 
-            <!-- Real Number Substitution -->
-            <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 space-y-3">
-              <div class="text-xs font-mono font-bold text-purple-400 uppercase tracking-wider">
-                Substitusi Nilai Riil Paper ASCPA (\(m = 1.0\text{ kg}, c = 6.0\text{ N}\cdot\text{s/m}, k = 25.0\text{ N/m}\)):
+            <!-- Substitution with Real Values -->
+            <div class="p-4 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-2">
+              <div class="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">
+                Substitusi Nilai Riil Paper (\(m = 1.0\,\text{kg}, c = 6.0\,\text{N}\cdot\text{s/m}, k = 25.0\,\text{N/m}\)):
               </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-xs sm:text-sm">
-                <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-center">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono text-xs text-center">
+                <div class="p-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
                   \[\mathbf{A} = \begin{bmatrix} 0 & 1 \\ -25 & -6 \end{bmatrix}, \quad \mathbf{B} = \begin{bmatrix} 0 \\ 1 \end{bmatrix}\]
                 </div>
-                <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-center">
+                <div class="p-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
                   \[\mathbf{C} = \begin{bmatrix} 1 & 0 \end{bmatrix}, \quad D = 0\]
                 </div>
               </div>
             </div>
 
-            <!-- Mathematical Proof of Equivalence -->
-            <div class="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-xs sm:text-sm text-slate-600 dark:text-slate-300 space-y-2">
-              <strong class="text-emerald-500 flex items-center gap-1.5 font-bold">
-                <i data-lucide="check" class="w-4 h-4"></i> Pembuktian Ekuivalensi Nilai Eigen Matriks A = Kutub PDB:
-              </div>
+            <!-- Mathematical Proof of Eigenvalues -->
+            <div class="p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/50 text-xs text-slate-600 dark:text-slate-300 space-y-1.5">
+              <strong class="text-emerald-600 dark:text-emerald-400 block font-bold">
+                ✓ Pembuktian Ekuivalensi: Nilai Eigen Matriks A = Kutub PDB
+              </strong>
               <p class="leading-relaxed">
-                Persamaan karakteristik matriks sistem diperoleh dari \(\det(s\mathbf{I} - \mathbf{A}) = 0\):
+                Persamaan karakteristik matriks: \(\det(s\mathbf{I} - \mathbf{A}) = s(s + 6) - (-1)(25) = s^2 + 6s + 25 = 0\).
               </p>
-              <div class="font-mono text-xs sm:text-sm text-center text-slate-900 dark:text-white py-1">
-                \[\det\begin{bmatrix} s & -1 \\ 25 & s + 6 \end{bmatrix} = s(s + 6) - (-1)(25) = s^2 + 6s + 25 = 0\]
+              <div class="font-mono text-xs text-center font-bold text-emerald-600 dark:text-emerald-400 py-1">
                 \[\lambda_{1,2} = -3 \pm j4\]
               </div>
-              <p class="leading-relaxed text-xs">
-                Nilai eigen matriks keadaan \(\mathbf{A}\) persis sama secara matematis dengan sepasang kutub konjugat kompleks \(p_{1,2} = -3 \pm j4\) pada fungsi alih \(G(s)\).
+              <p class="text-[11px] text-slate-500">
+                Nilai eigen matriks ruang keadaan terbukti identik mutlak dengan kutub fungsi alih Laplace, menjamin integritas fisik pemodelan.
               </p>
             </div>
           </div>
         </div>
 
       </div>
+
     </section>
 
-    <!-- SECTION 5: LIVE INTERACTIVE SIMULATOR -->
-    <section id="simulator" class="space-y-8 scroll-mt-24">
+    <!-- ========================================================================= -->
+    <!-- BAGIAN 5: SIMULATOR LIVE & PARAMETER TUNING -->
+    <!-- ========================================================================= -->
+    <section id="simulator-live" class="py-12 border-t border-slate-200 dark:border-slate-800 theme-transition space-y-8">
       
-      <!-- Section Header -->
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
-        <div>
-          <div class="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-brand-600 dark:text-brand-400 mb-1">
-            <i data-lucide="sliders" class="w-4 h-4"></i> BAGIAN 5
-          </div>
-          <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Simulasi Interaktif & Live Parameter Tuning
-          </h2>
-        </div>
-        <div class="text-xs font-mono text-slate-500 dark:text-slate-400">
-          Uji Perubahan Massa, Redaman, dan Kekakuan Real-Time
-        </div>
+      <div>
+        <span class="text-xs font-bold text-blue-600 uppercase tracking-widest bg-blue-50 dark:bg-blue-950/60 px-3 py-1 rounded-full w-fit">
+          Bagian 5 • Eksperimen Interaktif
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mt-2">
+          Simulator Dinamis & Parameter Tuning Live
+        </h2>
+        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          Ubah parameter fisik aktuator dan amati respon transien grafik posisi \(y(t)\) dan kecepatan \(v(t)\) seketika.
+        </p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
-        <!-- Controls & Sliders Panel -->
-        <div class="lg:col-span-5 glass-card p-6 rounded-3xl border shadow-card-light dark:shadow-card-dark space-y-6">
+        <!-- Controls Panel (lg:col-span-5) -->
+        <div class="lg:col-span-5 bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-6 shadow-sm">
           <div class="flex items-center justify-between">
-            <h4 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <i data-lucide="settings-2" class="w-4 h-4 text-brand-500"></i> Parameter Fisik
+            <h4 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <span class="material-icons text-[#4B6BFB] text-base">tune</span>
+              Slider Parameter Fisik
             </h4>
-            <button id="resetParams" class="text-xs font-mono text-brand-500 hover:underline">
+            <button id="resetParams" class="text-xs font-mono font-semibold text-[#4B6BFB] hover:underline cursor-pointer">
               Reset ke Paper
             </button>
           </div>
 
-          <!-- Presets Buttons -->
-          <div class="flex flex-wrap gap-1.5">
-            <button onclick="setPreset(1.0, 6.0, 25.0, 1.0)" class="px-2.5 py-1 rounded-lg text-xs font-mono bg-brand-500/10 text-brand-500 border border-brand-500/20 hover:bg-brand-500/20 transition-colors">
-              Default Paper (Underdamped)
+          <!-- Presets -->
+          <div class="flex flex-wrap gap-2">
+            <button onclick="setPreset(1.0, 6.0, 25.0, 1.0)" class="px-3 py-1 rounded-lg text-xs font-mono bg-blue-50 dark:bg-blue-950/80 text-[#4B6BFB] border border-blue-200 dark:border-blue-900/60 hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors cursor-pointer">
+              Default Paper (\(\zeta = 0.6\))
             </button>
-            <button onclick="setPreset(1.0, 10.0, 25.0, 1.0)" class="px-2.5 py-1 rounded-lg text-xs font-mono bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 transition-colors">
+            <button onclick="setPreset(1.0, 10.0, 25.0, 1.0)" class="px-3 py-1 rounded-lg text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer">
               Kritis (\(\zeta = 1.0\))
             </button>
-            <button onclick="setPreset(1.0, 15.0, 25.0, 1.0)" class="px-2.5 py-1 rounded-lg text-xs font-mono bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 transition-colors">
-              Overdamped (\(\zeta = 1.5\))
+            <button onclick="setPreset(1.0, 16.0, 25.0, 1.0)" class="px-3 py-1 rounded-lg text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer">
+              Overdamped (\(\zeta = 1.6\))
             </button>
           </div>
 
-          <!-- Sliders -->
+          <!-- Sliders List -->
           <div class="space-y-4 text-xs font-mono">
-            <!-- Massa m -->
             <div class="space-y-1.5">
               <div class="flex justify-between">
                 <span class="text-slate-500">Massa \(m\):</span>
-                <span id="val_m" class="font-bold text-slate-900 dark:text-white">1.0 kg</span>
+                <span id="val_m" class="font-bold text-slate-800 dark:text-white">1.0 kg</span>
               </div>
-              <input type="range" id="slider_m" min="0.2" max="3.0" step="0.1" value="1.0" class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer">
+              <input type="range" id="slider_m" min="0.2" max="3.0" step="0.1" value="1.0" class="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg cursor-pointer">
             </div>
 
-            <!-- Redaman c -->
             <div class="space-y-1.5">
               <div class="flex justify-between">
                 <span class="text-slate-500">Redaman Viskos \(c\):</span>
-                <span id="val_c" class="font-bold text-slate-900 dark:text-white">6.0 N·s/m</span>
+                <span id="val_c" class="font-bold text-slate-800 dark:text-white">6.0 N·s/m</span>
               </div>
-              <input type="range" id="slider_c" min="0.5" max="18.0" step="0.5" value="6.0" class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer">
+              <input type="range" id="slider_c" min="0.5" max="18.0" step="0.5" value="6.0" class="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg cursor-pointer">
             </div>
 
-            <!-- Kekakuan k -->
             <div class="space-y-1.5">
               <div class="flex justify-between">
                 <span class="text-slate-500">Kekakuan Kontak \(k\):</span>
-                <span id="val_k" class="font-bold text-slate-900 dark:text-white">25.0 N/m</span>
+                <span id="val_k" class="font-bold text-slate-800 dark:text-white">25.0 N/m</span>
               </div>
-              <input type="range" id="slider_k" min="5.0" max="60.0" step="1.0" value="25.0" class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer">
+              <input type="range" id="slider_k" min="5.0" max="60.0" step="1.0" value="25.0" class="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg cursor-pointer">
             </div>
 
-            <!-- Amplitudo Input A -->
             <div class="space-y-1.5">
               <div class="flex justify-between">
-                <span class="text-slate-500">Amplitudo Dorong \(A\):</span>
-                <span id="val_A" class="font-bold text-slate-900 dark:text-white">1.0 N</span>
+                <span class="text-slate-500">Gaya Dorong Masukan \(A\):</span>
+                <span id="val_A" class="font-bold text-[#4B6BFB]">1.0 N</span>
               </div>
-              <input type="range" id="slider_A" min="0.2" max="3.0" step="0.1" value="1.0" class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg cursor-pointer">
+              <input type="range" id="slider_A" min="0.2" max="3.0" step="0.1" value="1.0" class="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg cursor-pointer">
             </div>
           </div>
 
-          <!-- Dynamic Parameter Output Card -->
-          <div class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 space-y-3 font-mono text-xs">
-            <div class="text-slate-400 font-bold uppercase text-[10px] tracking-wider">
-              Karakteristik Kanonik Terhitung:
+          <!-- Dynamic Output Card -->
+          <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 font-mono text-xs space-y-2.5">
+            <div class="text-slate-400 font-bold uppercase text-[10px] tracking-wider">Karakteristik Kanonik Terhitung:</div>
+            <div class="grid grid-cols-2 gap-2 text-[11px]">
+              <div><span class="text-slate-500">\(\omega_n\):</span> <strong id="calc_wn" class="text-slate-900 dark:text-white">5.00 rad/s</strong></div>
+              <div><span class="text-slate-500">\(\zeta\):</span> <strong id="calc_zeta" class="text-[#4B6BFB]">0.600</strong></div>
+              <div><span class="text-slate-500">\(\omega_d\):</span> <strong id="calc_wd" class="text-slate-900 dark:text-white">4.00 rad/s</strong></div>
+              <div><span class="text-slate-500">Rezim:</span> <strong id="calc_regime" class="text-emerald-500">Underdamped</strong></div>
             </div>
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <span class="text-slate-500">\(\omega_n\):</span>
-                <span id="calc_wn" class="font-bold text-slate-900 dark:text-white">5.00 rad/s</span>
-              </div>
-              <div>
-                <span class="text-slate-500">\(\zeta\):</span>
-                <span id="calc_zeta" class="font-bold text-cyan-400">0.600</span>
-              </div>
-              <div>
-                <span class="text-slate-500">\(\omega_d\):</span>
-                <span id="calc_wd" class="font-bold text-slate-900 dark:text-white">4.00 rad/s</span>
-              </div>
-              <div>
-                <span class="text-slate-500">Rezim:</span>
-                <span id="calc_regime" class="font-bold text-emerald-400">Underdamped</span>
-              </div>
-            </div>
-            <div class="pt-2 border-t border-slate-200 dark:border-slate-800">
-              <div class="text-slate-500">Kutub Bidang-\(s\):</div>
-              <div id="calc_poles" class="font-bold text-purple-400 text-sm mt-0.5">-3.00 ± j4.00</div>
+            <div class="pt-2 border-t border-slate-200 dark:border-slate-800 text-[11px]">
+              <span class="text-slate-500">Kutub Bidang-\(s\):</span>
+              <strong id="calc_poles" class="text-purple-600 dark:text-purple-400 block mt-0.5">-3.00 ± j4.00</strong>
             </div>
           </div>
-
         </div>
 
-        <!-- Live Plot & Chart Canvas -->
-        <div class="lg:col-span-7 glass-card p-6 rounded-3xl border shadow-card-light dark:shadow-card-dark space-y-4">
-          <div class="flex flex-wrap items-center justify-between gap-2">
+        <!-- Chart Live Plot (lg:col-span-7) -->
+        <div class="lg:col-span-7 bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-4 shadow-sm">
+          <div class="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h4 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <i data-lucide="line-chart" class="w-4 h-4 text-emerald-500"></i>
-                Respons Dinamis Domain Waktu
+              <h4 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <span class="material-icons text-emerald-500 text-base">show_chart</span>
+                Respons Waktu-Nyata (Chart.js Engine)
               </h4>
-              <p class="text-xs text-slate-500 font-mono">Posisi \(y(t) = x_1\) & Kecepatan \(v(t) = x_2\)</p>
+              <p class="text-xs text-slate-400 font-mono">Posisi \(y(t) = x_1\) dan Kecepatan \(v(t) = x_2\)</p>
             </div>
-            
-            <!-- Plot Mode Tabs -->
-            <div class="flex rounded-xl bg-slate-200 dark:bg-slate-800 p-1 text-xs font-mono">
-              <button id="btnStep" class="px-3 py-1 rounded-lg bg-white dark:bg-slate-700 font-bold text-slate-900 dark:text-white shadow-sm">
+
+            <!-- Mode Selector Tabs -->
+            <div class="flex rounded-xl bg-slate-100 dark:bg-slate-800 p-1 text-xs font-mono">
+              <button id="btnStep" class="px-3 py-1 rounded-lg bg-white dark:bg-slate-700 font-bold text-slate-900 dark:text-white shadow-sm cursor-pointer">
                 Step Response
               </button>
-              <button id="btnImpulse" class="px-3 py-1 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white">
+              <button id="btnImpulse" class="px-3 py-1 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white cursor-pointer">
                 Impulse Response
               </button>
             </div>
           </div>
 
-          <!-- Canvas Container -->
-          <div class="w-full h-72 sm:h-80 relative rounded-2xl bg-white/40 dark:bg-slate-900/60 p-2 border border-slate-200 dark:border-slate-800">
+          <!-- Chart Canvas Container -->
+          <div class="w-full h-72 sm:h-80 relative rounded-xl bg-slate-50/50 dark:bg-slate-900/50 p-2 border border-slate-200/60 dark:border-slate-800">
             <canvas id="liveChart"></canvas>
           </div>
 
-          <div class="flex items-center justify-between text-[11px] font-mono text-slate-500 pt-2 border-t border-slate-200 dark:border-slate-800">
-            <span>Steady-State \(y_{ss} = A/k\): <strong id="calc_yss" class="text-slate-900 dark:text-white">0.040 m</strong></span>
+          <div class="flex items-center justify-between text-xs font-mono text-slate-500 pt-2 border-t border-slate-100 dark:border-slate-800">
+            <span>Posisi Steady-State \(y_{ss} = A/k\): <strong id="calc_yss" class="text-slate-900 dark:text-white">0.040 m</strong></span>
             <span>Settling Time (\(2\%\)): \(\approx 1.33\text{ s}\)</span>
           </div>
         </div>
@@ -937,187 +960,139 @@
       </div>
     </section>
 
-    <!-- SECTION 6: GALERI GRAFIK LAPORAN -->
-    <section id="figures" class="space-y-8 scroll-mt-24">
+    <!-- ========================================================================= -->
+    <!-- BAGIAN 6: GALERI GRAFIK LAPORAN -->
+    <!-- ========================================================================= -->
+    <section id="galeri-grafik" class="py-12 border-t border-slate-200 dark:border-slate-800 theme-transition space-y-8">
       
-      <!-- Section Header -->
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
-        <div>
-          <div class="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-brand-600 dark:text-brand-400 mb-1">
-            <i data-lucide="image" class="w-4 h-4"></i> BAGIAN 6
-          </div>
-          <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Galeri Grafik Validasi Analitis & Numerik
-          </h2>
-        </div>
-        <div class="text-xs font-mono text-slate-500 dark:text-slate-400">
-          Hasil Python & MATLAB Simulation (figures/)
-        </div>
+      <div>
+        <span class="text-xs font-bold text-blue-600 uppercase tracking-widest bg-blue-50 dark:bg-blue-950/60 px-3 py-1 rounded-full w-fit">
+          Bagian 6 • Verifikasi Visual
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mt-2">
+          Galeri Grafik Validasi Simulasi & Analisis Frekuensi
+        </h2>
+        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          Grafik resmi hasil eksekusi Python dan MATLAB dari direktori <code>figures/</code>.
+        </p>
       </div>
 
-      <!-- Figures Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         
-        <!-- Fig 2: Friction Comparison -->
-        <div class="glass-card rounded-3xl border shadow-card-light dark:shadow-card-dark overflow-hidden group flex flex-col justify-between">
+        <!-- Fig 2 -->
+        <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between group">
           <div class="p-3 bg-slate-950 overflow-hidden relative">
-            <img src="figures/fig2_friction_comparison.png" alt="Perbandingan Karakteristik Gesekan" class="w-full h-48 object-contain transform group-hover:scale-105 transition-transform duration-300">
-            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[10px] font-mono text-white">Gbr. 2 Paper/Tesis</span>
+            <img src="figures/fig2_friction_comparison.png" alt="Karakteristik Gesekan" class="w-full h-44 object-contain group-hover:scale-105 transition-transform duration-300">
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[9px] font-mono text-white">Gbr. 2 Paper MSSP</span>
           </div>
-          <div class="p-5 space-y-2">
-            <h5 class="font-bold text-sm text-slate-900 dark:text-white">Karakteristik Gesekan vs Kecepatan</h5>
-            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Membandingkan TPA, LFPA, dan ASCPA. Menunjukkan lenyapnya histeresis stick-slip dan kurva gesekan LuGre menjadi linier viskos.
+          <div class="p-4 space-y-1.5">
+            <h5 class="font-bold text-xs text-slate-900 dark:text-white">Karakteristik Gesekan vs Kecepatan</h5>
+            <p class="text-[11px] text-slate-500 leading-relaxed">
+              Membuktikan lenyapnya histeresis gesek padat pada ASCPA berkat pelumasan aerostatik.
             </p>
           </div>
         </div>
 
-        <!-- Fig 3: S-Plane Pole-Zero -->
-        <div class="glass-card rounded-3xl border shadow-card-light dark:shadow-card-dark overflow-hidden group flex flex-col justify-between">
+        <!-- Fig 3 -->
+        <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between group">
           <div class="p-3 bg-slate-950 overflow-hidden relative">
-            <img src="figures/fig3_splane_pole_zero.png" alt="Konstelasi Pole Zero S Plane" class="w-full h-48 object-contain transform group-hover:scale-105 transition-transform duration-300">
-            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[10px] font-mono text-white">Gbr. 3 Pole-Zero</span>
+            <img src="figures/fig3_splane_pole_zero.png" alt="S Plane Pole Zero" class="w-full h-44 object-contain group-hover:scale-105 transition-transform duration-300">
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[9px] font-mono text-white">Gbr. 3 Konstelasi Kutub</span>
           </div>
-          <div class="p-5 space-y-2">
-            <h5 class="font-bold text-sm text-slate-900 dark:text-white">Konstelasi Kutub pada Bidang-\(s\)</h5>
-            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Sepasang kutub konjugat kompleks \(p_{1,2} = -3 \pm j4\) pada LHP, sudut redaman \(\theta = 126.87^\circ\), dan jari-jari \(\omega_n = 5.0\,\text{rad/s}\).
+          <div class="p-4 space-y-1.5">
+            <h5 class="font-bold text-xs text-slate-900 dark:text-white">Konstelasi Kutub Bidang-\(s\)</h5>
+            <p class="text-[11px] text-slate-500 leading-relaxed">
+              Sepasang kutub kompleks \(p_{1,2} = -3 \pm j4\) pada LHP dengan sudut \(\theta = 126.87^\circ\).
             </p>
           </div>
         </div>
 
-        <!-- Fig 4: Bode Diagram -->
-        <div class="glass-card rounded-3xl border shadow-card-light dark:shadow-card-dark overflow-hidden group flex flex-col justify-between">
+        <!-- Fig 4 -->
+        <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between group">
           <div class="p-3 bg-slate-950 overflow-hidden relative">
-            <img src="figures/fig4_frequency_bode.png" alt="Diagram Bode Frekuensi" class="w-full h-48 object-contain transform group-hover:scale-105 transition-transform duration-300">
-            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[10px] font-mono text-white">Gbr. 4 Respon Frekuensi</span>
+            <img src="figures/fig4_frequency_bode.png" alt="Diagram Bode" class="w-full h-44 object-contain group-hover:scale-105 transition-transform duration-300">
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[9px] font-mono text-white">Gbr. 4 Diagram Bode</span>
           </div>
-          <div class="p-5 space-y-2">
-            <h5 class="font-bold text-sm text-slate-900 dark:text-white">Diagram Bode Magnitudo & Fasa</h5>
-            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Filter lolos-rendah orde 2 dengan roll-off \(-40\,\text{dB/dekade}\) dan pergeseran fasa asimtotik hingga \(-180^\circ\) pada frekuensi tinggi.
+          <div class="p-4 space-y-1.5">
+            <h5 class="font-bold text-xs text-slate-900 dark:text-white">Respon Frekuensi & Diagram Bode</h5>
+            <p class="text-[11px] text-slate-500 leading-relaxed">
+              Filter lolos-rendah orde 2 dengan roll-off curam \(-40\,\text{dB/dekade}\) dan fasa hingga \(-180^\circ\).
             </p>
           </div>
         </div>
 
-        <!-- Fig 5: Pulse Responses -->
-        <div class="glass-card rounded-3xl border shadow-card-light dark:shadow-card-dark overflow-hidden group flex flex-col justify-between">
+        <!-- Fig 5 -->
+        <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between group">
           <div class="p-3 bg-slate-950 overflow-hidden relative">
-            <img src="figures/fig5_pulse_responses.png" alt="Respons Pulsa Persegi Tunggal" class="w-full h-48 object-contain transform group-hover:scale-105 transition-transform duration-300">
-            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[10px] font-mono text-white">Gbr. 5 Pulsa Persegi</span>
+            <img src="figures/fig5_pulse_responses.png" alt="Respons Pulsa" class="w-full h-44 object-contain group-hover:scale-105 transition-transform duration-300">
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[9px] font-mono text-white">Gbr. 5 Pulsa Persegi</span>
           </div>
-          <div class="p-5 space-y-2">
-            <h5 class="font-bold text-sm text-slate-900 dark:text-white">Respons Pulsa Persegi Tunggal</h5>
-            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Dua rezim waktu: eksitasi paksa saat \(0 \le t < T\) dan getaran bebas meluruh asimtotik saat \(t \ge T\) untuk \(T = 0.5, 1.0, 2.0\,\text{s}\).
+          <div class="p-4 space-y-1.5">
+            <h5 class="font-bold text-xs text-slate-900 dark:text-white">Respons Pulsa Persegi Tunggal</h5>
+            <p class="text-[11px] text-slate-500 leading-relaxed">
+              Respon domain waktu untuk durasi \(T = 0.5, 1.0, 2.0\,\text{s}\) (eksitasi paksa & relaksasi bebas).
             </p>
           </div>
         </div>
 
-        <!-- Fig 6: Pulse Spectrum CTFT -->
-        <div class="glass-card rounded-3xl border shadow-card-light dark:shadow-card-dark overflow-hidden group flex flex-col justify-between">
+        <!-- Fig 6 -->
+        <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between group">
           <div class="p-3 bg-slate-950 overflow-hidden relative">
-            <img src="figures/fig6_pulse_spectrum.png" alt="Spektrum CTFT" class="w-full h-48 object-contain transform group-hover:scale-105 transition-transform duration-300">
-            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[10px] font-mono text-white">Gbr. 6 Spektrum CTFT</span>
+            <img src="figures/fig6_pulse_spectrum.png" alt="Spektrum CTFT" class="w-full h-44 object-contain group-hover:scale-105 transition-transform duration-300">
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[9px] font-mono text-white">Gbr. 6 CTFT Spektrum</span>
           </div>
-          <div class="p-5 space-y-2">
-            <h5 class="font-bold text-sm text-slate-900 dark:text-white">Spektrum CTFT Masukan & Keluaran</h5>
-            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Spektrum keluaran meluruh tajam pada laju \(\mathcal{O}(1/\omega^3)\) (\(-60\,\text{dB/dekade}\)), memperhalus lonjakan tekanan katup.
+          <div class="p-4 space-y-1.5">
+            <h5 class="font-bold text-xs text-slate-900 dark:text-white">Spektrum Fourier CTFT</h5>
+            <p class="text-[11px] text-slate-500 leading-relaxed">
+              Spektrum keluaran meluruh pada \(\mathcal{O}(1/\omega^3)\) (\(-60\,\text{dB/dekade}\)), memperhalus lonjakan katup.
             </p>
           </div>
         </div>
 
-        <!-- Fig 9: Impulse & Step Responses -->
-        <div class="glass-card rounded-3xl border shadow-card-light dark:shadow-card-dark overflow-hidden group flex flex-col justify-between">
+        <!-- Fig 9 -->
+        <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between group">
           <div class="p-3 bg-slate-950 overflow-hidden relative">
-            <img src="figures/fig9_impulse_step_response.png" alt="Respons Impuls dan Undak" class="w-full h-48 object-contain transform group-hover:scale-105 transition-transform duration-300">
-            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[10px] font-mono text-white">Gbr. 9 Impuls & Undak</span>
+            <img src="figures/fig9_impulse_step_response.png" alt="Impuls dan Undak" class="w-full h-44 object-contain group-hover:scale-105 transition-transform duration-300">
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[9px] font-mono text-white">Gbr. 9 Impuls & Step</span>
           </div>
-          <div class="p-5 space-y-2">
-            <h5 class="font-bold text-sm text-slate-900 dark:text-white">Respons Impuls & Undak Satuan</h5>
-            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              Validasi analitis vs integrasi numerik Python. Menunjukkan overshoot \(9.48\%\), waktu puncak \(t_p = 0.785\text{ s}\), dan settling time \(1.33\text{ s}\).
+          <div class="p-4 space-y-1.5">
+            <h5 class="font-bold text-xs text-slate-900 dark:text-white">Respons Impuls & Undak Satuan</h5>
+            <p class="text-[11px] text-slate-500 leading-relaxed">
+              Validasi analitis vs integrasi numerik: overshoot \(9.48\%\), waktu puncak \(t_p = 0.785\text{ s}\).
             </p>
           </div>
         </div>
 
       </div>
+
     </section>
 
-    <!-- SECTION 7: KESIMPULAN & SIFAT DASAR SISTEM -->
-    <section class="glass-card p-6 sm:p-10 rounded-3xl border shadow-card-light dark:shadow-card-dark space-y-6">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-2xl bg-brand-500/10 text-brand-500 flex items-center justify-center">
-          <i data-lucide="shield-check" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <h3 class="text-xl font-bold text-slate-900 dark:text-white">Rangkuman Sifat Dasar Sistem Linier (4 Pilar Teori)</h3>
-          <p class="text-xs text-slate-500 font-mono">Berdasarkan Pembuktian Matematis Formal pada Laporan</p>
-        </div>
+    <!-- ========================================================================= -->
+    <!-- FOOTER (Identik style C:\pkm) -->
+    <!-- ========================================================================= -->
+    <footer class="pt-8 pb-4 border-t border-slate-200 dark:border-slate-800 theme-transition flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-400">
+      <div class="flex items-center gap-2">
+        <span class="material-icons text-[#4B6BFB] text-base">verified</span>
+        <span>Proyek Akhir Mata Kuliah Sistem Linier 2026 • Departemen Teknik Elektro & Otomasi</span>
       </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-        <div class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
-          <div class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-            <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> 1. Linier (Linear)
-          </div>
-          <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-            Memenuhi prinsip superposisi homogenitas dan aditivitas: \(\mathcal{T}\{\alpha u_1 + \beta u_2\} = \alpha y_1 + \beta y_2\). Eliminasi gesekan kontak padat menjamin ketiadaan saturasi/histeresis.
-          </p>
-        </div>
-
-        <div class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
-          <div class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-            <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> 2. Invarian Waktu (TI)
-          </div>
-          <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-            Parameter \(m, c, k\) bernilai konstan sepanjang waktu operasi terkalibrasi: \(\mathcal{T}\{u(t - t_0)\} = y(t - t_0)\).
-          </p>
-        </div>
-
-        <div class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
-          <div class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-            <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> 3. Kausal (Causal)
-          </div>
-          <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-            Respons impuls \(h(t) = 0\) untuk seluruh \(t < 0\). Pahat gerinda mustahil bergerak sebelum katup menyuplai tekanan udara.
-          </p>
-        </div>
-
-        <div class="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 space-y-2">
-          <div class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-            <i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> 4. Stabil BIBO & Asimtotik
-          </div>
-          <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-            Integral impuls \(\int_0^\infty |h(t)| dt \le 0.0833 < \infty\), seluruh kutub terletak di sebelah kiri bidang-\(s\) (\(\text{Re}(p) = -3 < 0\)).
-          </p>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- Footer -->
-  <footer class="border-t border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 backdrop-blur-md py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-500">
-      <div>
-        <span>Proyek Akhir Mata Kuliah Sistem Linier 2026</span> • <span>Departemen Teknik Elektro & Otomasi</span>
-      </div>
-      <div class="flex items-center gap-4">
-        <a href="#hero" class="hover:text-brand-500 transition-colors flex items-center gap-1">
-          <i data-lucide="arrow-up" class="w-3.5 h-3.5"></i> Kembali ke Atas
+      <div class="flex items-center gap-6">
+        <a href="https://github.com/hellyoshaqiqie17/sislin" target="_blank" class="hover:text-[#4B6BFB] transition-colors flex items-center gap-1">
+          <span class="material-icons text-sm">code</span> GitHub Repo
+        </a>
+        <a href="#hero" class="hover:text-[#4B6BFB] transition-colors flex items-center gap-1">
+          <span class="material-icons text-sm">arrow_upward</span> Ke Atas
         </a>
       </div>
-    </div>
-  </footer>
+    </footer>
+
+  </div>
 
   <!-- Interactive JavaScript Logic -->
   <script>
     // Initialize Lucide Icons
     lucide.createIcons();
 
-    // KaTeX Auto-render
+    // KaTeX Auto-renderer
     document.addEventListener("DOMContentLoaded", function() {
       if (typeof renderMathInElement !== 'undefined') {
         renderMathInElement(document.body, {
@@ -1132,10 +1107,11 @@
       }
     });
 
-    // Dark/Light Theme Switcher Logic (matching hellyoshaqiqie theme toggle)
+    // Dark/Light Mode Switcher (Identik C:\pkm / C:\hellyoshaqiqie)
     const themeToggle = document.getElementById('themeToggle');
     themeToggle.addEventListener('click', () => {
-      if (document.documentElement.classList.contains('dark')) {
+      const isDark = document.documentElement.classList.contains('dark');
+      if (isDark) {
         document.documentElement.classList.remove('dark');
         localStorage.setItem('theme', 'light');
       } else {
@@ -1145,7 +1121,7 @@
       updateChartColors();
     });
 
-    // Live Simulator Physics Engine
+    // Live Simulator Logic
     let currentMode = 'step'; // 'step' or 'impulse'
     const slider_m = document.getElementById('slider_m');
     const slider_c = document.getElementById('slider_c');
@@ -1164,21 +1140,24 @@
     const calc_poles = document.getElementById('calc_poles');
     const calc_yss = document.getElementById('calc_yss');
 
+    const telem_u = document.getElementById('telem_u');
+    const telem_y = document.getElementById('telem_y');
+
     const btnStep = document.getElementById('btnStep');
     const btnImpulse = document.getElementById('btnImpulse');
     const resetParams = document.getElementById('resetParams');
 
     btnStep.addEventListener('click', () => {
       currentMode = 'step';
-      btnStep.className = "px-3 py-1 rounded-lg bg-white dark:bg-slate-700 font-bold text-slate-900 dark:text-white shadow-sm";
-      btnImpulse.className = "px-3 py-1 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white";
+      btnStep.className = "px-3 py-1 rounded-lg bg-white dark:bg-slate-700 font-bold text-slate-900 dark:text-white shadow-sm cursor-pointer";
+      btnImpulse.className = "px-3 py-1 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white cursor-pointer";
       updateSimulation();
     });
 
     btnImpulse.addEventListener('click', () => {
       currentMode = 'impulse';
-      btnImpulse.className = "px-3 py-1 rounded-lg bg-white dark:bg-slate-700 font-bold text-slate-900 dark:text-white shadow-sm";
-      btnStep.className = "px-3 py-1 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white";
+      btnImpulse.className = "px-3 py-1 rounded-lg bg-white dark:bg-slate-700 font-bold text-slate-900 dark:text-white shadow-sm cursor-pointer";
+      btnStep.className = "px-3 py-1 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white cursor-pointer";
       updateSimulation();
     });
 
@@ -1198,7 +1177,7 @@
       el.addEventListener('input', updateSimulation);
     });
 
-    // Chart.js Setup
+    // Chart.js Setup with PKM Color Palette
     const ctx = document.getElementById('liveChart').getContext('2d');
     let chart;
 
@@ -1208,7 +1187,7 @@
         gridColor: isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.06)',
         textColor: isDark ? '#94A3B8' : '#64748B',
         posLine: '#4B6BFB',
-        posFill: isDark ? 'rgba(75, 107, 251, 0.15)' : 'rgba(75, 107, 251, 0.1)',
+        posFill: isDark ? 'rgba(75, 107, 251, 0.15)' : 'rgba(75, 107, 251, 0.08)',
         velLine: '#10B981',
       };
     }
@@ -1226,7 +1205,7 @@
               borderColor: theme.posLine,
               backgroundColor: theme.posFill,
               fill: true,
-              borderWidth: 2.2,
+              borderWidth: 2.5,
               pointRadius: 0,
               tension: 0.2
             },
@@ -1244,7 +1223,7 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          animation: { duration: 150 },
+          animation: { duration: 120 },
           plugins: {
             legend: {
               labels: {
@@ -1296,10 +1275,14 @@
       val_k.textContent = k.toFixed(1) + ' N/m';
       val_A.textContent = A.toFixed(1) + ' N';
 
+      telem_u.textContent = A.toFixed(2) + ' N';
+
       const wn = Math.sqrt(k / m);
       const zeta = c / (2 * Math.sqrt(k * m));
       const sigma = zeta * wn;
       const yss = A / k;
+
+      telem_y.textContent = yss.toFixed(3) + ' m';
 
       calc_wn.textContent = wn.toFixed(2) + ' rad/s';
       calc_zeta.textContent = zeta.toFixed(3);
@@ -1311,17 +1294,17 @@
 
       if (Math.abs(zeta - 1.0) < 0.02) {
         regimeText = 'Critically Damped';
-        calc_regime.className = 'font-bold text-amber-400';
+        calc_regime.className = 'font-bold text-amber-500';
         polesText = `s₁,₂ = -${sigma.toFixed(2)} (kembar)`;
         wd = 0;
       } else if (zeta < 1.0) {
-        regimeText = 'Underdamped (Osilatoris)';
-        calc_regime.className = 'font-bold text-emerald-400';
+        regimeText = 'Underdamped';
+        calc_regime.className = 'font-bold text-emerald-500';
         wd = wn * Math.sqrt(1 - zeta * zeta);
         polesText = `-${sigma.toFixed(2)} ± j${wd.toFixed(2)}`;
       } else {
-        regimeText = 'Overdamped (Lambat)';
-        calc_regime.className = 'font-bold text-blue-400';
+        regimeText = 'Overdamped';
+        calc_regime.className = 'font-bold text-blue-500';
         const s1 = -sigma + wn * Math.sqrt(zeta * zeta - 1);
         const s2 = -sigma - wn * Math.sqrt(zeta * zeta - 1);
         polesText = `${s1.toFixed(2)}, ${s2.toFixed(2)}`;
@@ -1332,7 +1315,6 @@
       calc_regime.textContent = regimeText;
       calc_poles.textContent = polesText;
 
-      // Compute numerical/analytical simulation over t in [0, 4.0]
       const tMax = 3.5;
       const N = 180;
       const dt = tMax / N;
@@ -1348,25 +1330,19 @@
         let v = 0;
 
         if (currentMode === 'step') {
-          // Step Response
           if (zeta < 0.999) {
-            // Underdamped
-            const phi = Math.atan(Math.sqrt(1 - zeta * zeta) / zeta);
             y = yss * (1 - Math.exp(-sigma * t) * (Math.cos(wd * t) + (sigma / wd) * Math.sin(wd * t)));
             v = yss * (Math.exp(-sigma * t) * (wn * wn / wd) * Math.sin(wd * t));
           } else if (Math.abs(zeta - 1.0) <= 0.05) {
-            // Critically damped
             y = yss * (1 - Math.exp(-wn * t) * (1 + wn * t));
             v = yss * (wn * wn * t * Math.exp(-wn * t));
           } else {
-            // Overdamped
             const s1 = -sigma + wn * Math.sqrt(zeta * zeta - 1);
             const s2 = -sigma - wn * Math.sqrt(zeta * zeta - 1);
             y = yss * (1 - (s2 * Math.exp(s1 * t) - s1 * Math.exp(s2 * t)) / (s2 - s1));
             v = yss * (- (s1 * s2 * Math.exp(s1 * t) - s1 * s2 * Math.exp(s2 * t)) / (s2 - s1));
           }
         } else {
-          // Impulse Response
           if (zeta < 0.999) {
             y = (A / (m * wd)) * Math.exp(-sigma * t) * Math.sin(wd * t);
             v = (A / (m * wd)) * Math.exp(-sigma * t) * (-sigma * Math.sin(wd * t) + wd * Math.cos(wd * t));
@@ -1394,7 +1370,6 @@
       }
     }
 
-    // Initialize Chart and Simulation
     initChart();
     updateSimulation();
   </script>
