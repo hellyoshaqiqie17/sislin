@@ -1,9 +1,19 @@
 <!DOCTYPE html>
-<html lang="id" class="dark scroll-smooth">
+<html lang="id" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistem Linier ASCPA - WearOcean & PKM Inspired Architecture</title>
+  
+  <script>
+    // Inisialisasi tema default Light Mode ala C:\pkm
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  </script>
   
   <!-- Preconnect for Fonts -->
   <link rel="preconnect" href="https://api.fontshare.com">
@@ -492,7 +502,7 @@
             <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500">Gbr. 1 Laporan</span>
           </div>
 
-          <div class="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-950">
+          <div class="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
             <img src="figures/fig1_system_schematic.png" alt="Skema Sistem ASCPA" class="w-full h-auto object-contain">
           </div>
 
@@ -936,8 +946,8 @@
             </div>
 
             <!-- Mode Selector Tabs -->
-            <div class="flex rounded-xl bg-slate-100 dark:bg-slate-800 p-1 text-xs font-mono">
-              <button id="btnStep" class="px-3 py-1 rounded-lg bg-white dark:bg-slate-700 font-bold text-slate-900 dark:text-white shadow-sm cursor-pointer">
+            <div class="flex rounded-xl bg-slate-100 dark:bg-slate-800 p-1 text-xs font-mono border border-slate-200/60 dark:border-slate-700/60">
+              <button id="btnStep" class="px-3 py-1 rounded-lg bg-white dark:bg-slate-700 font-bold text-slate-900 dark:text-white shadow-sm border border-slate-200 dark:border-slate-600 cursor-pointer">
                 Step Response
               </button>
               <button id="btnImpulse" class="px-3 py-1 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white cursor-pointer">
@@ -981,9 +991,9 @@
         
         <!-- Fig 2 -->
         <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between group">
-          <div class="p-3 bg-slate-950 overflow-hidden relative">
+          <div class="p-3 bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800/80 overflow-hidden relative">
             <img src="figures/fig2_friction_comparison.png" alt="Karakteristik Gesekan" class="w-full h-44 object-contain group-hover:scale-105 transition-transform duration-300">
-            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[9px] font-mono text-white">Gbr. 2 Paper MSSP</span>
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 text-[9px] font-mono text-white backdrop-blur-sm">Gbr. 2 Paper MSSP</span>
           </div>
           <div class="p-4 space-y-1.5">
             <h5 class="font-bold text-xs text-slate-900 dark:text-white">Karakteristik Gesekan vs Kecepatan</h5>
@@ -995,9 +1005,9 @@
 
         <!-- Fig 3 -->
         <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between group">
-          <div class="p-3 bg-slate-950 overflow-hidden relative">
+          <div class="p-3 bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800/80 overflow-hidden relative">
             <img src="figures/fig3_splane_pole_zero.png" alt="S Plane Pole Zero" class="w-full h-44 object-contain group-hover:scale-105 transition-transform duration-300">
-            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[9px] font-mono text-white">Gbr. 3 Konstelasi Kutub</span>
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 text-[9px] font-mono text-white backdrop-blur-sm">Gbr. 3 Konstelasi Kutub</span>
           </div>
           <div class="p-4 space-y-1.5">
             <h5 class="font-bold text-xs text-slate-900 dark:text-white">Konstelasi Kutub Bidang-\(s\)</h5>
@@ -1009,9 +1019,9 @@
 
         <!-- Fig 4 -->
         <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between group">
-          <div class="p-3 bg-slate-950 overflow-hidden relative">
+          <div class="p-3 bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800/80 overflow-hidden relative">
             <img src="figures/fig4_frequency_bode.png" alt="Diagram Bode" class="w-full h-44 object-contain group-hover:scale-105 transition-transform duration-300">
-            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[9px] font-mono text-white">Gbr. 4 Diagram Bode</span>
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 text-[9px] font-mono text-white backdrop-blur-sm">Gbr. 4 Diagram Bode</span>
           </div>
           <div class="p-4 space-y-1.5">
             <h5 class="font-bold text-xs text-slate-900 dark:text-white">Respon Frekuensi & Diagram Bode</h5>
@@ -1023,9 +1033,9 @@
 
         <!-- Fig 5 -->
         <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between group">
-          <div class="p-3 bg-slate-950 overflow-hidden relative">
+          <div class="p-3 bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800/80 overflow-hidden relative">
             <img src="figures/fig5_pulse_responses.png" alt="Respons Pulsa" class="w-full h-44 object-contain group-hover:scale-105 transition-transform duration-300">
-            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[9px] font-mono text-white">Gbr. 5 Pulsa Persegi</span>
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 text-[9px] font-mono text-white backdrop-blur-sm">Gbr. 5 Pulsa Persegi</span>
           </div>
           <div class="p-4 space-y-1.5">
             <h5 class="font-bold text-xs text-slate-900 dark:text-white">Respons Pulsa Persegi Tunggal</h5>
@@ -1037,9 +1047,9 @@
 
         <!-- Fig 6 -->
         <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between group">
-          <div class="p-3 bg-slate-950 overflow-hidden relative">
+          <div class="p-3 bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800/80 overflow-hidden relative">
             <img src="figures/fig6_pulse_spectrum.png" alt="Spektrum CTFT" class="w-full h-44 object-contain group-hover:scale-105 transition-transform duration-300">
-            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[9px] font-mono text-white">Gbr. 6 CTFT Spektrum</span>
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 text-[9px] font-mono text-white backdrop-blur-sm">Gbr. 6 CTFT Spektrum</span>
           </div>
           <div class="p-4 space-y-1.5">
             <h5 class="font-bold text-xs text-slate-900 dark:text-white">Spektrum Fourier CTFT</h5>
@@ -1051,9 +1061,9 @@
 
         <!-- Fig 9 -->
         <div class="bg-white dark:bg-[#161F30] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between group">
-          <div class="p-3 bg-slate-950 overflow-hidden relative">
+          <div class="p-3 bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800/80 overflow-hidden relative">
             <img src="figures/fig9_impulse_step_response.png" alt="Impuls dan Undak" class="w-full h-44 object-contain group-hover:scale-105 transition-transform duration-300">
-            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/70 text-[9px] font-mono text-white">Gbr. 9 Impuls & Step</span>
+            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 text-[9px] font-mono text-white backdrop-blur-sm">Gbr. 9 Impuls & Step</span>
           </div>
           <div class="p-4 space-y-1.5">
             <h5 class="font-bold text-xs text-slate-900 dark:text-white">Respons Impuls & Undak Satuan</h5>
@@ -1149,14 +1159,14 @@
 
     btnStep.addEventListener('click', () => {
       currentMode = 'step';
-      btnStep.className = "px-3 py-1 rounded-lg bg-white dark:bg-slate-700 font-bold text-slate-900 dark:text-white shadow-sm cursor-pointer";
+      btnStep.className = "px-3 py-1 rounded-lg bg-white dark:bg-slate-700 font-bold text-slate-900 dark:text-white shadow-sm border border-slate-200 dark:border-slate-600 cursor-pointer";
       btnImpulse.className = "px-3 py-1 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white cursor-pointer";
       updateSimulation();
     });
 
     btnImpulse.addEventListener('click', () => {
       currentMode = 'impulse';
-      btnImpulse.className = "px-3 py-1 rounded-lg bg-white dark:bg-slate-700 font-bold text-slate-900 dark:text-white shadow-sm cursor-pointer";
+      btnImpulse.className = "px-3 py-1 rounded-lg bg-white dark:bg-slate-700 font-bold text-slate-900 dark:text-white shadow-sm border border-slate-200 dark:border-slate-600 cursor-pointer";
       btnStep.className = "px-3 py-1 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white cursor-pointer";
       updateSimulation();
     });
